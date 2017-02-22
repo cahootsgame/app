@@ -5,19 +5,28 @@
  */
 
 import React, { Component } from 'react';
+import WelcomeScreen from './welcomeScreen';
 import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  Button,
+  TouchableHighlight
 } from 'react-native';
 
+//import WelcomeScreen from './welcomeScreen'
+
 export default class Cahoots extends Component {
+  onPressLearnMore(){
+    console.log("The button is pressed");
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Welcome to React Native!
+         Cahoots!
         </Text>
         <Text style={styles.instructions}>
           To get started, edit index.ios.js
@@ -26,6 +35,8 @@ export default class Cahoots extends Component {
           Press Cmd+R to reload,{'\n'}
           Cmd+D or shake for dev menu
         </Text>
+        <WelcomeScreen text={"Start new game"}/>
+        <WelcomeScreen text={"Connect to an existing game"}/>
       </View>
     );
   }
@@ -34,7 +45,6 @@ export default class Cahoots extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
