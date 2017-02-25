@@ -6,20 +6,26 @@
 
 import React, { Component } from 'react';
 import gameCode from './loadNewGame.js';
+import WelcomeScreen from './welcomeScreen';
 
 import {
   AppRegistry,
   StyleSheet,
+  Navigator,
   Text,
-  View
+  View,
+  Button,
+  TouchableHighlight
 } from 'react-native';
 
+
 export default class Cahoots extends Component {
+
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Welcome to React Native!
+         Cahoots!
         </Text>
         <Text style={styles.instructions}>
           To get started, edit index.ios.js
@@ -28,20 +34,24 @@ export default class Cahoots extends Component {
           Press Cmd+R to reload,{'\n'}
           Cmd+D or shake for dev menu
         </Text>
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Game ID: {this.props.gamecode}
-        </Text>
-      </View>
+        <WelcomeScreen onButtonClick={this.onPressStartNewGame} text={"Start new game"}/>
+        <WelcomeScreen onButtonClick={this.onPressConnectGame} text={"Connect to an existing game"}/>
       </View>
     );
+  }
+
+  onPressStartNewGame(){
+    console.log("START NEW GAME PRESSEED");
+  }
+
+  onPressConnectGame() {
+    console.log("CONNECT TO GAME PRESSED")
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
