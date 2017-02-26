@@ -22,7 +22,7 @@ class WelcomeScreen extends Component {
 
   render() {
     return (
-     <TouchableHighlight onPress ={this.onPressLearnMore} underlayColor={'#878a8e'}>
+     <TouchableHighlight onPress ={this.onClick.bind(this)} underlayColor={'#878a8e'}>
           <View style={styles.container}>
             <Text style={styles.instructions}>
               {this.props.text}

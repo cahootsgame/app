@@ -33,7 +33,7 @@ export default class LandingPage extends Component {
           Cmd+D or shake for dev menu
         </Text>
         <WelcomeScreen onButtonClick={this.onPressStartNewGame.bind(this)} text={"Start new game"}/>
-        <WelcomeScreen onButtonClick={this.onPressConnectGame} text={"Connect to an existing game"}/>
+        <WelcomeScreen onButtonClick={this.onPressConnectGame.bind(this)} text={"Connect to an existing game"}/>
       </View>
     );
   }
