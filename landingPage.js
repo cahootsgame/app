@@ -6,7 +6,7 @@
 
 import React, { Component } from 'react';
 import EnterGameCode from './loadNewGame.js';
-import WelcomeScreen from './welcomeScreen';
+import TouchableButton from './touchableButton';
 
 import {
   AppRegistry,
@@ -32,8 +32,8 @@ export default class LandingPage extends Component {
           Press Cmd+R to reload,{'\n'}
           Cmd+D or shake for dev menu
         </Text>
-        <WelcomeScreen onButtonClick={this.onPressStartNewGame.bind(this)} text={"Start new game"}/>
-        <WelcomeScreen onButtonClick={this.onPressConnectGame} text={"Connect to an existing game"}/>
+        <TouchableButton onButtonClick={this.onPressStartNewGame.bind(this)} text={"Start new game"}/>
+        <TouchableButton onButtonClick={this.onPressConnectGame} text={"Connect to an existing game"}/>
       </View>
     );
   }

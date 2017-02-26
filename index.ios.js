@@ -18,7 +18,7 @@ class Cahoots extends Component {
 
   render() {
     return (
-      
+
       <Navigator
         initialRoute={{id: 'LandingPage'}}
         renderScene={this.navigatorRenderScene}/>
@@ -32,7 +32,7 @@ class Cahoots extends Component {
     switch (route.id) {
       case 'LandingPage':
         return (<LandingPage navigator={navigator} title="Start new game or connect"/>);
-      
+
       case 'EnterGameCode':
         return (<EnterGameCode navigator={navigator} title="Enter new game code"/>);
     }
@@ -41,4 +41,3 @@ class Cahoots extends Component {
 
 
 AppRegistry.registerComponent('Cahoots', () => Cahoots);
-
