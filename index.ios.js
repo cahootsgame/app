@@ -1,69 +1,43 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
 
-import React, { Component } from 'react'
-//var React = require('react');
 
-import TouchableButton from './touchableButton';
-import GameCode from './loadNewGame';
+import React, { Component } from 'react';
+import LandingPage from './landingPage'
+import EnterGameCode from './loadNewGame.js'
+
 import {
   AppRegistry,
   StyleSheet,
+  Navigator,
   Text,
   View,
   Button,
   TouchableHighlight
 } from 'react-native';
 
-
-
-//import WelcomeScreen from './welcomeScreen'
-
-export default class Cahoots extends Component {
-  onPressLearnMore(){
-    console.log("The button is pressed");
-  }
+class Cahoots extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-         Cahoots!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
-        <TouchableButton text={"Start new game"}/>
-        <TouchableButton text={"Connect to an existing game"}/>
-        <GameCode />
-      </View>
+
+      <Navigator
+        initialRoute={{id: 'LandingPage'}}
+        renderScene={this.navigatorRenderScene}/>
+
     );
+  }
+
+  navigatorRenderScene(route,navigator){
+    console.log("NAVIGATOR RENDER SCENE RUNS")
+    _navigator = navigator;
+    switch (route.id) {
+      case 'LandingPage':
+        return (<LandingPage navigator={navigator} title="Start new game or connect"/>);
+
+      case 'EnterGameCode':
+        return (<EnterGameCode navigator={navigator} title="Enter new game code"/>);
+    }
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
 
 AppRegistry.registerComponent('Cahoots', () => Cahoots);
