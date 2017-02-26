@@ -4,7 +4,7 @@ import { View,
         TouchableHighlight,
         StyleSheet} from 'react-native'
 
-class WelcomeScreen extends Component {
+class TouchableButton extends Component {
 
   static propTypes = {}
 
@@ -59,4 +59,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default WelcomeScreen
+export default TouchableButton
