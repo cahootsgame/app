@@ -5,7 +5,7 @@
  */
 
 import React, { Component } from 'react';
-import WelcomeScreen from './welcomeScreen';
+import TouchableButton from './touchableButton';
 import {
   AppRegistry,
   StyleSheet,
@@ -35,8 +35,8 @@ export default class Cahoots extends Component {
           Press Cmd+R to reload,{'\n'}
           Cmd+D or shake for dev menu
         </Text>
-        <WelcomeScreen text={"Start new game"}/>
-        <WelcomeScreen text={"Connect to an existing game"}/>
+        <TouchableButton text={"Start new game"}/>
+        <TouchableButton text={"Connect to an existing game"}/>
       </View>
     );
   }
