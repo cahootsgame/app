@@ -4,8 +4,11 @@
  * @flow
  */
 
-import React, { Component } from 'react';
+import React, { Component } from 'react'
+//var React = require('react');
+
 import TouchableButton from './touchableButton';
+import GameCode from './loadNewGame';
 import {
   AppRegistry,
   StyleSheet,
@@ -14,6 +17,8 @@ import {
   Button,
   TouchableHighlight
 } from 'react-native';
+
+
 
 //import WelcomeScreen from './welcomeScreen'
 
@@ -37,6 +42,7 @@ export default class Cahoots extends Component {
         </Text>
         <TouchableButton text={"Start new game"}/>
         <TouchableButton text={"Connect to an existing game"}/>
+        <GameCode />
       </View>
     );
   }
