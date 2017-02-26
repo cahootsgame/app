@@ -1,4 +1,5 @@
 import React, { Component, } from 'react'
+import Cahoots from './index.ios.js'
 import { View, 
         Text, 
         TouchableHighlight,
@@ -15,8 +16,8 @@ class WelcomeScreen extends Component {
     this.state = {}
   }
   
-  onPressLearnMore(){
-    console.log("This has been pressed");
+  onClick(){
+    this.props.onButtonClick()
   }
 
   render() {
@@ -28,7 +29,7 @@ class WelcomeScreen extends Component {
             </Text>
           </View>
         </TouchableHighlight>
-    )
+    ) 
   }
 }
 

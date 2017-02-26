@@ -1,58 +1,44 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
+
 
 import React, { Component } from 'react';
-import WelcomeScreen from './welcomeScreen';
+import LandingPage from './landingPage'
+import EnterGameCode from './loadNewGame.js'
+
 import {
   AppRegistry,
   StyleSheet,
+  Navigator,
   Text,
   View,
   Button,
   TouchableHighlight
 } from 'react-native';
 
-//import WelcomeScreen from './welcomeScreen'
-
-export default class Cahoots extends Component {
-  onPressLearnMore(){
-    console.log("The button is pressed");
-  }
+class Cahoots extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-         CAHOOTS!
-        </Text>
-        <WelcomeScreen text={"START NEW GAME"}/>
-        <WelcomeScreen text={"CONNECT TO AN EXISTING GAME"}/>
-        <WelcomeScreen text={"HOW TO PLAY"}/>
-      </View>
+      
+      <Navigator
+        initialRoute={{id: 'LandingPage'}}
+        renderScene={this.navigatorRenderScene}/>
+
     );
+  }
+
+  navigatorRenderScene(route,navigator){
+    console.log("NAVIGATOR RENDER SCENE RUNS")
+    _navigator = navigator;
+    switch (route.id) {
+      case 'LandingPage':
+        return (<LandingPage navigator={navigator} title="Start new game or connect"/>);
+      
+      case 'EnterGameCode':
+        return (<EnterGameCode navigator={navigator} title="Enter new game code"/>);
+    }
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  welcome: {
-    fontSize: 70,
-    textAlign: 'center',
-    marginTop: 160,
-    marginBottom: 40,
-    fontWeight: "100",
-  },
-  /*instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },*/
-});
 
 AppRegistry.registerComponent('Cahoots', () => Cahoots);
+
