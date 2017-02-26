@@ -1,11 +1,11 @@
 import React, { Component, } from 'react'
 import Cahoots from './index.ios.js'
-import { View, 
-        Text, 
+import { View,
+        Text,
         TouchableHighlight,
         StyleSheet} from 'react-native'
 
-class WelcomeScreen extends Component {
+class TouchableButton extends Component {
 
   static propTypes = {}
 
@@ -15,7 +15,7 @@ class WelcomeScreen extends Component {
     super(props)
     this.state = {}
   }
-  
+
   onClick(){
     this.props.onButtonClick()
   }
@@ -29,7 +29,7 @@ class WelcomeScreen extends Component {
             </Text>
           </View>
         </TouchableHighlight>
-    ) 
+    )
   }
 }
 
@@ -65,4 +65,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default WelcomeScreen
+export default TouchableButton

@@ -15,6 +15,7 @@ const firebaseConfig = {
   storageBucket: "cahoots-46db1.appspot.com",
 };
 
+
 export default class EnterGameCode extends Component {
   render() {
     return (
