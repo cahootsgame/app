@@ -20,7 +20,7 @@ export default class gameCode extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Game ID: {this.props.gamecode}
+          Game ID: X58G4f
         </Text>
       </View>
     );
@@ -45,4 +45,3 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 });
-
