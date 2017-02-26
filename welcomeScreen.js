@@ -21,8 +21,8 @@ class WelcomeScreen extends Component {
 
   render() {
     return (
-     <TouchableHighlight onPress ={this.onPressLearnMore} underlayColor={'red'}>
-          <View style={styles.container1}>
+     <TouchableHighlight onPress ={this.onPressLearnMore} underlayColor={'#878a8e'}>
+          <View style={styles.container}>
             <Text style={styles.instructions}>
               {this.props.text}
             </Text>
@@ -34,11 +34,17 @@ class WelcomeScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    //flex: 1,
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: 'black',
+    height: 70,
+    width: 300,
+    marginBottom: 5,
+    justifyContent: 'center',
+    borderRadius: 6,
+    paddingTop: 20,
   },
-    container1: {
+   /* container1: {
     //flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -47,13 +53,12 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: '#007aFF',
     marginBottom: 5
-  },
+  },*/
   instructions: {
     flex: 1,
     fontFamily: 'HelveticaNeue-Medium',
     fontSize: 20,
-    //alignItems: 'center',
-    //justifyContent: 'center',
+    fontWeight: "normal",
     textAlign: 'center',
     color: 'white',
   },

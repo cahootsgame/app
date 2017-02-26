@@ -26,17 +26,11 @@ export default class Cahoots extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-         Cahoots!
+         CAHOOTS!
         </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
-        <WelcomeScreen text={"Start new game"}/>
-        <WelcomeScreen text={"Connect to an existing game"}/>
+        <WelcomeScreen text={"START NEW GAME"}/>
+        <WelcomeScreen text={"CONNECT TO AN EXISTING GAME"}/>
+        <WelcomeScreen text={"HOW TO PLAY"}/>
       </View>
     );
   }
@@ -46,18 +40,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
   welcome: {
-    fontSize: 20,
+    fontSize: 70,
     textAlign: 'center',
-    margin: 10,
+    marginTop: 160,
+    marginBottom: 40,
+    fontWeight: "100",
   },
-  instructions: {
+  /*instructions: {
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
-  },
+  },*/
 });
 
 AppRegistry.registerComponent('Cahoots', () => Cahoots);
