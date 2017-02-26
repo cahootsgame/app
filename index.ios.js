@@ -18,9 +18,11 @@ class Cahoots extends Component {
 
   render() {
     return (
+      
       <Navigator
         initialRoute={{id: 'LandingPage'}}
         renderScene={this.navigatorRenderScene}/>
+
     );
   }
 
@@ -39,3 +41,4 @@ class Cahoots extends Component {
 
 
 AppRegistry.registerComponent('Cahoots', () => Cahoots);
+
