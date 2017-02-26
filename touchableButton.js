@@ -1,7 +1,7 @@
 import React, { Component, } from 'react'
 import Cahoots from './index.ios.js'
-import { View, 
-        Text, 
+import { View,
+        Text,
         TouchableHighlight,
         StyleSheet} from 'react-native'
 
@@ -15,21 +15,21 @@ class TouchableButton extends Component {
     super(props)
     this.state = {}
   }
-  
+
   onClick(){
     this.props.onButtonClick()
   }
 
   render() {
     return (
-     <TouchableHighlight onPress ={this.onPressLearnMore} underlayColor={'#878a8e'}>
+     <TouchableHighlight onPress ={this.onClick.bind(this)} underlayColor={'#878a8e'}>
           <View style={styles.container}>
             <Text style={styles.instructions}>
               {this.props.text}
             </Text>
           </View>
         </TouchableHighlight>
-    ) 
+    )
   }
 }
 
