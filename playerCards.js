@@ -44,14 +44,14 @@ class PlayerCards extends Component {
         return (
           <View>
             <Text>You are a Henchman</Text>
-            <Text>You're one of the bad guys, be discrete so no one can find you.</Text>
+            <Text>You are one of the bad guys, be discrete so no one can find you.</Text>
           </View>
         );
       case 'Warlord':
         return (
           <View>
             <Text>You are a Warlord</Text>
-            <Text>You're one of the bad guys, be discrete so no one can find you.</Text>
+            <Text>You are one of the bad guys, be discrete so no one can find you.</Text>
           </View>
         );
     }
