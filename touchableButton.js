@@ -1,10 +1,11 @@
 import React, { Component, } from 'react'
-import { View, 
-        Text, 
+import Cahoots from './index.ios.js'
+import { View,
+        Text,
         TouchableHighlight,
         StyleSheet} from 'react-native'
 
-class WelcomeScreen extends Component {
+class TouchableButton extends Component {
 
   static propTypes = {}
 
@@ -14,14 +15,14 @@ class WelcomeScreen extends Component {
     super(props)
     this.state = {}
   }
-  
-  onPressLearnMore(){
-    console.log("This has been pressed");
+
+  onClick(){
+    this.props.onButtonClick()
   }
 
   render() {
     return (
-     <TouchableHighlight onPress ={this.onPressLearnMore} underlayColor={'#878a8e'}>
+     <TouchableHighlight onPress ={this.onClick.bind(this)} underlayColor={'#878a8e'}>
           <View style={styles.container}>
             <Text style={styles.instructions}>
               {this.props.text}
@@ -64,4 +65,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default WelcomeScreen
+export default TouchableButton
