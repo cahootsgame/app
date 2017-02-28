@@ -5,7 +5,7 @@
  */
 
 import React, { Component } from 'react';
-import EnterGameCode from './loadNewGame.js';
+import {EnterGameCode, GenerateGameCode} from './loadGame.js';
 import TouchableButton from './touchableButton';
 
 import {
@@ -41,13 +41,16 @@ export default class LandingPage extends Component {
   onPressStartNewGame(){
     console.log("START NEW GAME PRESSED")
     this.props.navigator.push({
-      id: 'EnterGameCode'
+      id: 'GenerateGameCode'
     })
 
   }
 
   onPressConnectGame() {
-    console.log("CONNECT TO GAME PRESSED")
+    console.log("CONNECT TO GAME PRESSED");
+		this.props.navigator.push({
+			id: 'EnterGameCode'
+		})
         // This component will be pushed onto the stack
   }
 }

@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import LandingPage from './landingPage'
-import EnterGameCode from './loadNewGame.js'
+import {EnterGameCode, GenerateGameCode} from './loadGame.js'
 
 import {
   AppRegistry,
@@ -35,6 +35,12 @@ class Cahoots extends Component {
 
       case 'EnterGameCode':
         return (<EnterGameCode navigator={navigator} title="Enter new game code"/>);
+
+			case 'GenerateGameCode':
+				return(<GenerateGameCode navigator={navigator} title="Enter new game code" />);
+
+			case 'CollectingPlayers':
+				return(<LandingPage navigator={navigator} title="Start new game or connect"/>)
     }
   }
 }
