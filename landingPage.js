@@ -7,6 +7,7 @@
 import React, { Component } from 'react';
 import EnterGameCode from './loadNewGame.js';
 import TouchableButton from './touchableButton';
+import NumberOfPlayers from './numberOfPlayers';
 
 import {
   AppRegistry,
@@ -37,7 +38,7 @@ export default class LandingPage extends Component {
   onPressStartNewGame(){
     console.log("START NEW GAME PRESSED")
     this.props.navigator.push({
-      id: 'EnterGameCode'
+      id: 'NumberOfPlayers'
     })
 
   }

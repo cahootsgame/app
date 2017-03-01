@@ -3,6 +3,8 @@
 import React, { Component } from 'react';
 import LandingPage from './landingPage'
 import EnterGameCode from './loadNewGame.js'
+import NumberOfPlayers from './numberOfPlayers.js'
+import ChooseTheme from './chooseTheme.js'
 
 import {
   AppRegistry,
@@ -35,6 +37,12 @@ class Cahoots extends Component {
 
       case 'EnterGameCode':
         return (<EnterGameCode navigator={navigator} title="Enter new game code"/>);
+
+      case 'NumberOfPlayers':
+        return (<NumberOfPlayers navigator={navigator} title="Enter the number of players"/>);
+
+      case 'ChooseTheme':
+        return (<ChooseTheme navigator={navigator} title="Choose the theme"/>);
     }
   }
 }

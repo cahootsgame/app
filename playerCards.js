@@ -1,5 +1,5 @@
 import React, { Component, } from 'react'
-import { View, } from 'react-native'
+import { View, Text } from 'react-native'
 
 class PlayerCards extends Component {
 
@@ -10,10 +10,10 @@ class PlayerCards extends Component {
   constructor(props) {
     //playerNum
     super(props)
-    this.state = {characters5: ["Warlord", "Henchman", "Citizen", "Citizen", "Citizen"]}
+    //this.state = {characters5: ["Warlord", "Henchman", "Citizen", "Citizen", "Citizen"]}
   }
-  
-  shuffle(array) {
+  //TODO: ALl this needs to be moved to the loading page!
+  /*shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
     // While there remain elements to shuffle...
     while (0 !== currentIndex) {
@@ -26,13 +26,13 @@ class PlayerCards extends Component {
       array[randomIndex] = temporaryValue;
     }
     return array;
-  }
+  }*/
 
   render() {
-    shuffle(this.state.characters5);
-    var shuffledArr = this.state.characters5;
-    var role = shuffledArr[this.props.playerNum];
-    switch role {
+    //shuffle(this.state.characters5);
+    //var shuffledArr = this.state.characters5;
+    //var role = shuffledArr[this.props.playerNum];
+    switch this.props.role {
       case 'Citizen':
         return (
           <View>
