@@ -1,10 +1,12 @@
 import * as firebase from 'firebase';
 import React, { Component } from 'react';
+import TouchableButton from './touchableButton';
 import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  Navigator
 } from 'react-native';
 
 // Initialize Firebase
@@ -46,30 +48,43 @@ export default class EnterGameCode extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
+      <View style={styling.container}>
+        <TouchableButton style={styling.back} text={"BACK"} onButtonClick={this.onPressBack.bind(this)}/>
+        <Text style={styling.welcome}>
           Game ID: {this.state.gameId}
         </Text>
       </View>
     );
   }
+  
+  onPressBack(){
+    console.log("BACK PRESSED")
+    this.props.navigator.pop();
+
+  }
 }
 
-const styles = StyleSheet.create({
-  container: {
+const styling = StyleSheet.create({
+  back: {
+    marginTop: 55,
+    marginLeft: 5,
+    height: 10,
+    width: 20
+  },
+  /*container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-  },
+  },*/
   welcome: {
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
   },
-  instructions: {
+  /*instructions: {
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
-  },
+  },*/
 });
