@@ -49,18 +49,17 @@ export default class EnterGameCode extends Component {
   render() {
     return (
       <View style={styling.container}>
-        <TouchableButton style={styling.back} text={"BACK"} onButtonClick={this.onPressBack.bind(this)}/>
         <Text style={styling.welcome}>
           Game ID: {this.state.gameId}
         </Text>
+        <TouchableButton style={styling.back} text={"BACK"} onButtonClick={this.onPressBack.bind(this)}/>
       </View>
     );
   }
-  
+
   onPressBack(){
     console.log("BACK PRESSED")
     this.props.navigator.pop();
-
   }
 }
 
