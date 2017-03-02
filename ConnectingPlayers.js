@@ -17,6 +17,7 @@ import {
 
 var database = firebase.database();
 var gameRef = database.ref().child('Game');
+var playersRef = database.ref().child('Players');
 
 
 type State = { animating: boolean; };
@@ -45,36 +46,38 @@ export default class ConnectingPlayers extends Component {
   }
 
   waitForPlayers() {
-    /*while (allplayers.length != snapshot.val("numPlayers")) {
-      var allplayers = snapshot.val().players;
-    }*/
-  // HOW TO GET NUM PLAYERS
-  // HOW TO PASS THE GAME CODE FROM PREVIOUS SCREEN
-  var allPlayers;
+  
   var totalCurrentPlayers;
   var totalFinalPlayers;
-
-  //TODO: Connect to Rithus Character cards component and try again after sheethala fixes bug
-  //while (true) {
-    gameRef.child(this.props.gameId).once('value', snapshot => {
-        if(snapshot.val() !== null){
-          //debugger;
-          allPlayers = snapshot.val().players;
-          totalCurrentPlayers = allPlayers.length;
-          totalFinalPlayers = snapshot.val().numPlayers
-          console.log(allPlayers);
-          console.log(totalCurrentPlayers);
-          console.log(totalFinalPlayers);
-
-        }
-
+  var code = this.props.gameId;
+  var playersPath = code.concat("-players");
+  
+  while (true) {
+    gameRef.child(code).once('value', snapshot => {
+      if (snapshot.val() !== null) {
+        totalFinalPlayers = snapshot.val().numPlayers;
+        console.log(totalFinalPlayers);
+      }
     })
-    /*if (totalCurrentPlayers === totalFinalPlayers) {
+    // Players path is of the form {gamecode}-players
+    playersRef.child(playersPath).once('value', snapshot => {
+      if (snapshot.val() != null) {
+        totalCurrentPlayers = snapshot.val().totalNumPlayers;
+        console.log(totalCurrentPlayers);
+      }
+    })
+
+    // As soon as all the players are on you can start, push the character cards!
+    if (totalCurrentPlayers === totalFinalPlayers) {
       break;
-    }*/
+    }
+
+
+  }
+}
   //}
   //pushCharacterCard();
-}   
+  //}   
 
  /* pushCharacterCard() {
     this.props.navigator.push({
@@ -138,43 +141,3 @@ const styles = StyleSheet.create({
 });
 
 
-/*export default class ConnectingPlayers extends Component {
-
-  static propTypes = {}
-
-  static defaultProps = {}
-
-  constructor(props) {
-    super(props)
-    this.state = {}
-  }
-
-  render() {
-    return (
-      <View style={styles.container}>
-        //<Progress.Circle size={30} indeterminate={true} />
-        <Text style={styles.welcome}>
-          Waiting for players to connect
-        </Text>
-      </View>
-    );
-  }
-} 
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});*/
