@@ -8,7 +8,7 @@ import * as firebase from 'firebase';
 import React, { Component } from 'react';
 import {EnterGameCode, GenerateGameCode} from './loadGame.js';
 import TouchableButton from './touchableButton';
-import fb from './firebaseConfig.js'
+import fb from './firebaseConfig.js';
 
 var database = firebase.database();
 var gameRef = database.ref().child('Game');
@@ -53,32 +53,6 @@ export default class ModeratorActions extends Component {
         database.ref(gamePath).update({'cahootVote': 1}); 
       }
     })
-
-  /*  if (this.props.playerId === 1) {
-      var code = this.props.gameId
-      var gamePath = 'Game/'.concat(code);
-      var ret; 
-      var codePlayers;
-      while (true) {
-        gameRef.child(code).once('value', snapshot => {
-          if(snapshot.val() !== null) {
-            // Moderator clicked the button for voting
-            ret = snapshot.val().cahootVote;
-            codePlayers = code.concat('-players')
-            if (ret === 1) {
-              this.props.navigator.push({
-                id: 'VotingPage',
-                gameId: codePlayers,
-              })
-              break;
-            }
-          }
-
-        })
-      }
-
-    } */
-
   }
 
   onPressAllVote() {

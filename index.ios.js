@@ -43,11 +43,11 @@ class Cahoots extends Component {
       case 'EnterGameCode':
         return (<EnterGameCode navigator={navigator} title="Enter new game code"/>);
 
-			case 'GenerateGameCode':
-				return(<GenerateGameCode navigator={navigator} title="Enter new game code" />);
+      case 'GenerateGameCode':
+        return(<GenerateGameCode navigator={navigator} title="Enter new game code" />);
 
-			case 'ConnectingPlayers':
-				return(<ConnectingPlayers navigator={navigator} title="Wait for players to connect" gameId={route.gameId} playerId={route.playerId}/>);
+      case 'ConnectingPlayers':
+        return(<ConnectingPlayers navigator={navigator} title="Wait for players to connect" gameId={route.gameId} playerId={route.playerId}/>);
 
       case 'NumberOfPlayers':
         return (<NumberOfPlayers navigator={navigator} title="Enter the number of players"/>);
