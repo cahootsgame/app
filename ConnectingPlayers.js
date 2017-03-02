@@ -75,15 +75,7 @@ export default class ConnectingPlayers extends Component {
 
   }
 }
-  //}
-  //pushCharacterCard();
-  //}   
 
- /* pushCharacterCard() {
-    this.props.navigator.push({
-      id: 'PlayerCards'
-    })
-  }*/
 
 
   setToggleTimeout() {
