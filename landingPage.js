@@ -5,7 +5,7 @@
  */
 
 import React, { Component } from 'react';
-import EnterGameCode from './loadNewGame.js';
+import {EnterGameCode, GenerateGameCode} from './loadGame.js';
 import TouchableButton from './touchableButton';
 import NumberOfPlayers from './numberOfPlayers';
 
@@ -18,6 +18,8 @@ import {
   Button,
   TouchableHighlight
 } from 'react-native';
+
+// Can we assign player IDs here?
 
 
 export default class LandingPage extends Component {
@@ -44,7 +46,10 @@ export default class LandingPage extends Component {
   }
 
   onPressConnectGame() {
-    console.log("CONNECT TO GAME PRESSED")
+    console.log("CONNECT TO GAME PRESSED");
+		this.props.navigator.push({
+			id: 'EnterGameCode'
+		})
         // This component will be pushed onto the stack
   }
 }

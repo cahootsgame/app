@@ -1,6 +1,6 @@
 import React, { Component, } from 'react'
 import TouchableButton from './touchableButton';
-import EnterGameCode from './loadNewGame.js';
+import GenerateGameCode from './loadGame.js';
 import NumberOfPlayers from './numberOfPlayers';
 
 import { View, Navigator, Picker, StyleSheet, Text } from 'react-native'
@@ -13,7 +13,7 @@ class ChooseTheme extends Component {
 
   constructor(props) {
     super(props)
-    this.state = {warzone: "Warzone", forest: "Forest", aquarium: "Aquarium", villiage: "Villiage",
+    this.state = {warzone: "Warzone", forest: "Forest", aquarium: "Aquarium", village: "Village",
                   government: "Government", none: "No Theme", theme: "Warzone"};
   }
 
@@ -27,7 +27,7 @@ class ChooseTheme extends Component {
       <Picker.Item label="Warzone" value="warzone" />
       <Picker.Item label="Forest" value="forest" />
       <Picker.Item label="Aquarium" value="aquarium" />
-      <Picker.Item label="Villiage" value="villiage" />
+      <Picker.Item label="Village" value="village" />
       <Picker.Item label="Government" value="government" />
       <Picker.Item label="No Theme" value="none" />
     </Picker>
@@ -40,7 +40,7 @@ class ChooseTheme extends Component {
   onPressNext(){
     console.log("Next pressed in choose theme")
     this.props.navigator.push({
-      id: 'EnterGameCode'
+      id: 'GenerateGameCode'
     })
   }
 
