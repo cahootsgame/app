@@ -33,11 +33,23 @@ export default class ConnectingPlayers extends Component {
     super(props);
     this.state = {
       animating: true,
+      characters4: ["Warlord", "Citizen", "Citizen"]
     };
   }
 
   componentDidMount() {
+    var code = this.props.gameId;
+    var playersPath = code.concat("-players");
     this.setToggleTimeout();
+    playersRef.child(playersPath).once('value', snapshot => {
+      var totalNum = snapshot.val().totalNumPlayers;
+      if(totalNum !== 4){
+        this.waitForPlayers();
+      }
+      else{
+        this.pushCharacterCard();
+      }
+    });
     //this.waitForPlayers();
   }
 
@@ -45,44 +57,117 @@ export default class ConnectingPlayers extends Component {
     clearTimeout(this._timer);
   }
 
+  checkNumberPlayers(code, playersPath) {
+    gameRef.child(code).once('value', snapshot => {
+      var totalFinalPlayers = snapshot.val().numPlayers;
+      console.log('totalFinalPlayers: ' + totalFinalPlayers);
+      playersRef.child(playersPath).once('value', snapshot => {
+        var totalCurrentPlayers = snapshot.val().totalNumPlayers;
+        console.log('totalCurrentPlayers: ' + totalCurrentPlayers)
+        if(totalFinalPlayers == totalCurrentPlayers) {
+          return true;
+        }
+        else return false;
+      })
+    })
+  }
+
+
+
   waitForPlayers() {
-  
+
   var totalCurrentPlayers;
   var totalFinalPlayers;
   var code = this.props.gameId;
+  var playerId = this.props.playerId;
   var playersPath = code.concat("-players");
-  
-  while (true) {
-    gameRef.child(code).once('value', snapshot => {
-      if (snapshot.val() !== null) {
-        totalFinalPlayers = snapshot.val().numPlayers;
-        console.log(totalFinalPlayers);
-      }
-    })
-    // Players path is of the form {gamecode}-players
-    playersRef.child(playersPath).once('value', snapshot => {
-      if (snapshot.val() != null) {
-        totalCurrentPlayers = snapshot.val().totalNumPlayers;
-        console.log(totalCurrentPlayers);
-      }
-    })
+  var check = true;
+  playersRef.child(playersPath).on('child_changed', snapshot =>{
+    var value = snapshot.val()
+    var key = snapshot.key;
+    console.log(key);
+    console.log(value);
+    if((key === 'totalNumPlayers') && (value === 4)){
+      this.pushCharacterCard();
+    }
+    console.log("Added value");
+  });
+  //this.pushCharacterCard();
+
+  /*while (check) {
+    // gameRef.child(code).once('value', snapshot => {
+    //   if (snapshot.val() !== null) {
+    //     totalFinalPlayers = snapshot.val().numPlayers;
+    //     console.log(totalFinalPlayers);
+    //   }
+    // })
+    // // Players path is of the form {gamecode}-players
+    // playersRef.child(playersPath).once('value', snapshot => {
+    //   if (snapshot.val() != null) {
+    //     totalCurrentPlayers = snapshot.val().totalNumPlayers;
+    //     console.log(totalCurrentPlayers);
+    //   }
+    // })
 
     // As soon as all the players are on you can start, push the character cards!
-    if (totalCurrentPlayers === totalFinalPlayers) {
-      break;
+    // console.log(totalCurrentPlayers);
+    // console.log(totalFinalPlayers);
+
+    gameRef.child(code).once('value', snapshot => {
+      var totalFinalPlayers = snapshot.val().numPlayers;
+      console.log('totalFinalPlayers: ' + totalFinalPlayers);
+      playersRef.child(playersPath).once('value', snapshot => {
+        var totalCurrentPlayers = snapshot.val().totalNumPlayers;
+        console.log('totalCurrentPlayers: ' + totalCurrentPlayers)
+        if(totalFinalPlayers == totalCurrentPlayers) {
+          check = false;
+          return;
+        }
+      })
+    })
+
+
+
+    // var check = this.checkNumberPlayers(code,playersPath);
+    // console.log('check: ' + check);
+  }*/
+
+}
+
+  pushCharacterCard() {
+    if(this.props.playerId === 1){
+      this.props.navigator.push({
+        id: 'PlayerCards',
+        role: "Warlord",
+        status: 1,
+        gameId: this.props.gameId+'-players',
+      });
+    }
+    else{
+      this.props.navigator.push({
+        id: 'PlayerCards',
+        role: "Citizen",
+        status: 1,
+        gameId: this.props.gameId+'-players',
+        playerId: this.props.playerId
+      });
     }
 
-
   }
-}
-  //}
-  //pushCharacterCard();
-  //}   
 
- /* pushCharacterCard() {
-    this.props.navigator.push({
-      id: 'PlayerCards'
-    })
+  /*shuffle(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+      // And swap it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+    return array;
   }*/
 
 
@@ -98,22 +183,24 @@ export default class ConnectingPlayers extends Component {
   render() {
     return (
       <View style={styles.container}>
+      <Text style={styles.title}>
+        Waiting for players to connect..
+      </Text>
         <ActivityIndicator
-          style={[styles.centering, {transform: [{scale: 1.5}]}]}
+          style={[styles.centering, {transform: [{scale: 2.5}]}]}
           size="large" />
-        <Text style={styles.welcome}>
-          Waiting for players to connect..
-        </Text>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-    container: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+  title: {
+    fontSize: 40,
+    textAlign: 'center',
+    marginTop: 200,
+    marginBottom: 25,
+    fontWeight: "100",
   },
   welcome: {
     fontSize: 20,
@@ -139,5 +226,3 @@ const styles = StyleSheet.create({
     padding: 8,
   },
 });
-
-
