@@ -35,7 +35,7 @@ export class GenerateGameCode extends Component{
 
 		firebase.database().ref('Game/' + this.state.gameId).set({
 			'adminId': 0,
-			'numPlayers': 6,
+			'numPlayers': 4,
 			'theme': 0,
 			//'players': [0]
 		})
@@ -45,7 +45,6 @@ export class GenerateGameCode extends Component{
 		})
 
 		firebase.database().ref(PlayerPath + 0).set({
-			'id': 0,
 			'ismoderator': 1,
 			'status': 'NA',
 		})
@@ -83,10 +82,8 @@ export class EnterGameCode extends Component {
 		}
 	}
 
-	pushPlayer(code){
-
+	pushConnectingScene(code){
 		// overwriting entire game, want to just set player field
-		//gameRef.child(code).players.push({'players': arr});
 		this.props.navigator.push({
 			id: 'ConnectingPlayers',
 			gameId: code
@@ -94,32 +91,43 @@ export class EnterGameCode extends Component {
 
 	}
 
+	addPlayerToDatabase(code, totalNum) {
+		console.log("IN ADD PLAYER")
+		var playersEntry = code.concat("-players/");
+		var playerPath = 'Players/'.concat(playersEntry);
+		gameRef.child(code).once('value', snapshot => {
+			if(snapshot.val() !== null){
+				console.log("Game exists");
+				total = totalNum - 1
+				firebase.database().ref(playerPath + total).set({
+					'ismoderator': 0,
+					'status': 'alive',
+				})
+				this.pushConnectingScene(code);
+			}
+
+			else {
+				console.log("Error the game doesn't exist");
+				Alert.alert('Invalid Game Code','The game code you have entered does not exist, please try again.',[{text: 'OK', onPress: () => console.log('OK Pressed')}], { cancelable: false });
+			}
+		})
+	}
+
 	connectPlayers(code){
-
-		if(code){
-			gameRef.child(code).once('value', snapshot => {
-				if(snapshot.val() !== null){
-
-					console.log("Game exists");
-					//We know the game exists so add teh player to the game
-					var playersEntry = code.concat("-players/");
-					var playerPath = 'Players/'.concat(playersEntry);
-
-					firebase.database().ref(playerPath + 1).set({
-						'id': 1,
-						'ismoderator': 0,
-						'status': 'alive',
-					})
-					//database.ref.child(PlayersEntry).set(totalCurrPlayers + 1)
-					this.pushPlayer(code);
-				}
-
-				else {
-					console.log("Error the game doesn't exist");
-					Alert.alert('Invalid Game Code','The game code you have entered does not exist, please try again.',[{text: 'OK', onPress: () => console.log('OK Pressed')}], { cancelable: false });
-				}
-			})
-		}
+		console.log("IN CONNECT PLAYERS");
+		var playersEntry = code.concat("-players");
+		var playerPath = 'Players/'.concat(playersEntry);
+		var totalCurrentPlayers;
+		playersRef.child(playersEntry).once('value', snapshot => {
+			console.log("BEFORE SNAPSHOT NOT = NULL");
+			debugger;
+       		if (snapshot.val() != null) {
+       			totalCurrentPlayers = snapshot.val().totalNumPlayers;
+       			totalCurrentPlayers = totalCurrentPlayers + 1;
+        		database.ref(playerPath).update({'totalNumPlayers': totalCurrentPlayers});
+        		this.addPlayerToDatabase(code,totalCurrentPlayers);
+      		}
+    	})
 
 	}
 
