@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import LandingPage from './landingPage'
 import {EnterGameCode, GenerateGameCode} from './loadGame.js'
 import ConnectingPlayers from './ConnectingPlayers.js';
-import NumberOfPlayers from './numberOfPlayers.js';
+import NumberOfPlayers from './numberOfPlayers.js'
+import ModeratorActions from './moderateScene.js'
 import ChooseTheme from './chooseTheme.js';
 import VotingPage from './votingPage.js';
 import PlayerCards from './playerCards.js';
@@ -53,14 +54,14 @@ class Cahoots extends Component {
 
       case 'ChooseTheme':
         return (<ChooseTheme navigator={navigator} title="Choose the theme"/>);
-
+      case 'ModeratorActions':
+        return(<ModeratorActions navigator={navigator} title="Moderator Screen" gameId={route.gameId} playerId={route.playerId}/>);
       case 'PlayerCards':
         return(<PlayerCards navigator={navigator} title="Wait for players to connect" role={route.role} status={route.status} gameId={route.gameId} playerId={route.playerId}/>);
       case 'VotingPage':
           return(<VotingPage navigator={navigator} />);
       case 'VotingResults':
           return(<VotingResults navigator={navigator} />);
-
     }
   }
 }

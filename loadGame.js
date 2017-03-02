@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import ConnectingPlayers from './ConnectingPlayers.js';
 import TouchableButton from './touchableButton.js';
 import fb from './firebaseConfig.js'
+import ModeratorActions from './moderateScene.js'
 
 import {
   AppRegistry,
@@ -10,7 +11,7 @@ import {
   StyleSheet,
   Text,
   View,
-	TextInput
+  TextInput
 } from 'react-native';
 
 var database = firebase.database();
@@ -22,7 +23,7 @@ export class GenerateGameCode extends Component{
 		super(props);
 		this.state={
 			gameId: '',
-      myId: '',
+			myId: ''
 		}
 	}
 
@@ -38,6 +39,7 @@ export class GenerateGameCode extends Component{
 			'adminId': 0,
 			'numPlayers': 4,
 			'theme': 0,
+			'cahootVote': 0,
 			//'players': [0]
 		})
 		firebase.database().ref('Players/' + playersEntry).set({
@@ -47,7 +49,7 @@ export class GenerateGameCode extends Component{
 
 		firebase.database().ref(PlayerPath + 0).set({
 			'ismoderator': 1,
-			'status': 'NA',
+			'status': -1,
 		})
 	}
 
@@ -55,6 +57,14 @@ export class GenerateGameCode extends Component{
 		this.pushNewGame();
 	}
 
+	onPressModScreen() {
+		this.props.navigator.push({
+			id: 'ModeratorActions',
+			gameId: this.state.gameId,
+			playerId: this.state.myId
+
+		})
+	}
   onPressBack() {
     console.log("Back pressed in game id screen")
     this.props.navigator.pop();
@@ -66,7 +76,8 @@ export class GenerateGameCode extends Component{
       <Text style={styles.title}>Tell your friends!</Text>
         <Text style={styles.welcome}>
           Game ID: {this.state.gameId}
-        </Text>
+          </Text>
+        <TouchableButton  onButtonClick={this.onPressModScreen.bind(this)} text={"START"}/>
         <TouchableButton style={styles.back} text={"BACK"} onButtonClick={this.onPressBack.bind(this)}/>
       </View>
 
@@ -88,7 +99,7 @@ export class EnterGameCode extends Component {
 		this.props.navigator.push({
 			id: 'ConnectingPlayers',
 			gameId: code,
-      playerId: this.state.myId,
+      		playerId: this.state.myId,
 		})
 
 	}
@@ -101,10 +112,10 @@ export class EnterGameCode extends Component {
 			if(snapshot.val() !== null){
 				console.log("Game exists");
 				total = totalNum - 1;
-        this.setState({myId: total});
+				this.setState({myId: total});
 				firebase.database().ref(playerPath + total).set({
 					'ismoderator': 0,
-					'status': 'alive',
+					'status': 1,
 				})
 				this.pushConnectingScene(code);
 			}

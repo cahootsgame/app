@@ -16,8 +16,7 @@ class PlayerCards extends Component {
     this.state = {citizenTitle: "You are a Citizen", citizenBody: "You do not have any special powers but keep an eye out for the bad guys so you can exile them."}
   }
 
-  /*getVotePate(){
-    if (this.props.playerId === 1) {
+  getVoteVal(){
       var code = this.props.gameId
       var gamePath = 'Game/'.concat(code);
       var ret;
@@ -38,8 +37,7 @@ class PlayerCards extends Component {
           }
         })
       }
-    }
-  }*/
+  }
 
   checkStatus(){
     while(true){
@@ -59,6 +57,9 @@ class PlayerCards extends Component {
   componentDidMount(){
     if(this.props.playerId == 2){
       this.checkStatus();
+    }
+    if(this.props.playerId == 1) {
+      getVoteVal();
     }
   }
 
