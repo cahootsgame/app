@@ -4,6 +4,7 @@ import fb from './firebaseConfig.js';
 
 var database = fb.database();
 var playersRef = database.ref().child('Players');
+var gameRef = database.ref().child('Game');
 
 class PlayerCards extends Component {
 
@@ -16,7 +17,22 @@ class PlayerCards extends Component {
     this.state = {citizenTitle: "You are a Citizen", citizenBody: "You do not have any special powers but keep an eye out for the bad guys so you can exile them."}
   }
 
-  getVoteVal(){
+  getVotePate(){
+      var code = this.props.gameId;
+      gameRef.child(code).on('child_changed', snapshot =>{
+        var value = snapshot.val();
+        var key = snapshot.key;
+        console.log(key);
+        console.log(value);
+        if((key === 'cahootVote') && (value === 1)){
+            this.props.navigator.push({
+            id: 'VotingPage',
+            gameId: codePlayers,
+          })
+        }
+      });
+
+    /*if (this.props.playerId === 1) {
       var code = this.props.gameId
       var gamePath = 'Game/'.concat(code);
       var ret;
@@ -32,11 +48,11 @@ class PlayerCards extends Component {
                 id: 'VotingPage',
                 gameId: codePlayers,
               })
-              break;
             }
           }
         })
       }
+    }*/
   }
 
   checkStatus(){
@@ -59,8 +75,8 @@ class PlayerCards extends Component {
       this.checkStatus();
     }
     if(this.props.playerId == 1) {
-      getVoteVal();
-    }
+      getVotePate();
+    } 
   }
 
   render() {

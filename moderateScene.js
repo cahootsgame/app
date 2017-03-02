@@ -53,18 +53,32 @@ export default class ModeratorActions extends Component {
         database.ref(gamePath).update({'cahootVote': 1}); 
       }
     })
+  }
 
-  /*  if (this.props.playerId === 1) {
-      var code = this.props.gameId
-      var gamePath = 'Game/'.concat(code);
-      var ret; 
-      var codePlayers;
-      while (true) {
-        gameRef.child(code).once('value', snapshot => {
-          if(snapshot.val() !== null) {
-            // Moderator clicked the button for voting
-            ret = snapshot.val().cahootVote;
-            codePlayers = code.concat('-players')
+  onPressAllVote() {
+    console.log("EVERYONE VOTE PRESSED");
+  }
+}
+
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
+  instructions: {
+    textAlign: 'center',
+    color: '#333333',
+    marginBottom: 5,
+  },
+});            codePlayers = code.concat('-players')
             if (ret === 1) {
               this.props.navigator.push({
                 id: 'VotingPage',
