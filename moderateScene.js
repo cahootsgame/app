@@ -78,44 +78,4 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
-});            codePlayers = code.concat('-players')
-            if (ret === 1) {
-              this.props.navigator.push({
-                id: 'VotingPage',
-                gameId: codePlayers,
-              })
-              break;
-            }
-          }
-
-        })
-      }
-
-    } */
-
-  }
-
-  onPressAllVote() {
-    console.log("EVERYONE VOTE PRESSED");
-  }
-}
-
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
 });
