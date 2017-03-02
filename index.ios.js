@@ -4,9 +4,9 @@ import LandingPage from './landingPage'
 import {EnterGameCode, GenerateGameCode} from './loadGame.js'
 import ConnectingPlayers from './ConnectingPlayers.js';
 import NumberOfPlayers from './numberOfPlayers.js'
-import ChooseTheme from './chooseTheme.js'
-import VotingPage from './votingPage.js'
-//import VotingPage from './VotingPage.js'
+import ChooseTheme from './chooseTheme.js';
+import VotingPage from './votingPage.js';
+import VotingResults from './votingResults.js';
 
 import {
   AppRegistry,
@@ -52,8 +52,10 @@ class Cahoots extends Component {
       case 'ChooseTheme':
         return (<ChooseTheme navigator={navigator} title="Choose the theme"/>);
 
-      //case 'VotingPage':
-       //   return(<VotingPage navigator={navigator} />);
+      case 'VotingPage':
+          return(<VotingPage navigator={navigator} />);
+      case 'VotingResults':
+          return(<VotingResults navigator={navigator} />);
     }
   }
 }
