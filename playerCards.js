@@ -60,7 +60,7 @@ class PlayerCards extends Component {
 
   checkStatus(){
 		console.log("The game id in CHECK STATUS IS " + this.props.gameId);
-		var code = this.props.gameId+'-players';
+		var code = this.props.gameId+'-players/2';
 		playersRef.child(code).on('child_changed', snapshot =>{
 			var key = snapshot.key;
 			var value = snapshot.val();
