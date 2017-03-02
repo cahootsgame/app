@@ -7,6 +7,7 @@
 import React, { Component } from 'react';
 import {EnterGameCode, GenerateGameCode} from './loadGame.js';
 import TouchableButton from './touchableButton';
+import NumberOfPlayers from './numberOfPlayers';
 
 import {
   AppRegistry,
@@ -18,22 +19,20 @@ import {
   TouchableHighlight
 } from 'react-native';
 
+// Can we assign player IDs here?
+
 
 export default class LandingPage extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View>
         <Text style={styles.welcome}>
-         Cahoots!
+         CAHOOTS!
         </Text>
-        <Text>Current Scene: {this.props.title}</Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
-        <TouchableButton onButtonClick={this.onPressStartNewGame.bind(this)} text={"Start new game"}/>
-        <TouchableButton onButtonClick={this.onPressConnectGame.bind(this)} text={"Connect to an existing game"}/>
+        <TouchableButton  onButtonClick={this.onPressStartNewGame.bind(this)} text={"START"}/>
+        <TouchableButton onButtonClick={this.onPressConnectGame.bind(this)} text={"CONNECT TO AN EXISTING GAME"}/>
+        <TouchableButton text={"HOW TO PLAY"}/>
       </View>
     );
   }
@@ -41,7 +40,7 @@ export default class LandingPage extends Component {
   onPressStartNewGame(){
     console.log("START NEW GAME PRESSED")
     this.props.navigator.push({
-      id: 'GenerateGameCode'
+      id: 'NumberOfPlayers'
     })
 
   }
@@ -56,19 +55,11 @@ export default class LandingPage extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
   welcome: {
-    fontSize: 20,
+    fontSize: 40,
     textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+    marginTop: 160,
+    marginBottom: 40,
+    fontWeight: "100",
   },
 });
