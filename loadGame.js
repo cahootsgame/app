@@ -67,7 +67,9 @@ export class EnterGameCode extends Component {
 	}
 
 	pushPlayer(arr, code){
-		gameRef.child(code).set({'players': arr});
+		//debugger;
+		gameRef.child(code).child('players').update({'players': arr});
+
 		this.props.navigator.push({
 			id: 'CollectingPlayers'
 		})
