@@ -5,6 +5,7 @@ import {EnterGameCode, GenerateGameCode} from './loadGame.js'
 import ConnectingPlayers from './ConnectingPlayers.js';
 import NumberOfPlayers from './numberOfPlayers.js'
 import ChooseTheme from './chooseTheme.js'
+import ModeratorActions from './moderateScene.js'
 //import VotingPage from './VotingPage.js'
 
 import {
@@ -51,8 +52,11 @@ class Cahoots extends Component {
       case 'ChooseTheme':
         return (<ChooseTheme navigator={navigator} title="Choose the theme"/>);
 
+      case 'ModeratorActions':
+        return(<ModeratorActions navigator={navigator} title="Moderator Screen" gameId={route.gameId} playerId={route.playerId}/>);
+
       //case 'VotingPage':
-       //   return(<VotingPage navigator={navigator} />);
+       //   return(<VotingPage navigator={navigator gameId={route.gameId}} />);
     }
   }
 }
