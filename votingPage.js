@@ -53,9 +53,10 @@ export default class VotingPage extends Component {
 
     completeVote(){
       console.log('yo');
+			console.log(this.props.gameId);
 			firebase.database().ref('Players/' + this.props.gameId  + '-players/2').update({
 				'status': 0
-			})
+			});
       this.props.navigator.push({
         id: 'VotingResults'
       })
