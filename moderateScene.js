@@ -4,9 +4,15 @@
  * @flow
  */
 
+import * as firebase from 'firebase';
 import React, { Component } from 'react';
 import {EnterGameCode, GenerateGameCode} from './loadGame.js';
 import TouchableButton from './touchableButton';
+import fb from './firebaseConfig.js';
+
+var database = firebase.database();
+var gameRef = database.ref().child('Game');
+var playersRef = database.ref().child('Players');
 
 import {
   AppRegistry,
@@ -34,23 +40,27 @@ export default class ModeratorActions extends Component {
       </View>
     );
   }
+
+  // PASS CODE AS PROP
   onPressCahootsVote(){
     console.log("CAHOOT VOTE PRESSED")
-    // This should add a value to the database to indicate that all cahoots screens should change to vote on who to kill off
-
-    /*this.props.navigator.push({
-      id: 'GenerateGameCode'
-    })*/
-
+    var code = this.props.gameId
+    var gamePath = 'Game/'.concat(code); 
+    gameRef.child(code).once('value', snapshot => {
+      if(snapshot.val() !== null){
+        console.log("Game exists");
+        // ACTIVATE VOTE FOR CAHOOTS
+        database.ref(gamePath).update({'cahootVote': 1}); 
+      }
+    })
   }
 
-  onPressEveryoneVote() {
+  onPressAllVote() {
     console.log("EVERYONE VOTE PRESSED");
-    /*this.props.navigator.push({
-      id: 'EnterGameCode'
-    })*/
   }
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
