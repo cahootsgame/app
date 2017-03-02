@@ -46,12 +46,12 @@ export default class ConnectingPlayers extends Component {
   }
 
   waitForPlayers() {
-  
+
   var totalCurrentPlayers;
   var totalFinalPlayers;
   var code = this.props.gameId;
   var playersPath = code.concat("-players");
-  
+
   while (true) {
     gameRef.child(code).once('value', snapshot => {
       if (snapshot.val() !== null) {
@@ -90,12 +90,13 @@ export default class ConnectingPlayers extends Component {
   render() {
     return (
       <View style={styles.container}>
+      <Text style={styles.title}>
+        Waiting for players to connect..
+      </Text>
         <ActivityIndicator
-          style={[styles.centering, {transform: [{scale: 1.5}]}]}
+          style={[styles.centering, {transform: [{scale: 2.5}]}]}
           size="large" />
-        <Text style={styles.welcome}>
-          Waiting for players to connect..
-        </Text>
+
       </View>
     );
   }
@@ -105,17 +106,13 @@ const styles = StyleSheet.create({
     container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
-  welcome: {
-    fontSize: 20,
+  title: {
+    fontSize: 40,
     textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+    marginTop: 200,
+    marginBottom: 20,
+    fontWeight: "100",
   },
   centering: {
     alignItems: 'center',
@@ -131,5 +128,3 @@ const styles = StyleSheet.create({
     padding: 8,
   },
 });
-
-
