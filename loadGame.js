@@ -116,7 +116,8 @@ export class EnterGameCode extends Component {
 				firebase.database().ref(playerPath + total).set({
 					'ismoderator': 0,
 					'status': 1,
-				})
+				});
+				console.log("the myId state is : " + this.state.myId);
 				this.pushConnectingScene(code);
 			}
 

@@ -43,6 +43,7 @@ export default class ConnectingPlayers extends Component {
     this.setToggleTimeout();
     playersRef.child(playersPath).once('value', snapshot => {
       var totalNum = snapshot.val().totalNumPlayers;
+			console.log("the total number of playres is " + totalNum);
       if(totalNum !== 4){
         this.waitForPlayers();
       }
@@ -92,40 +93,7 @@ export default class ConnectingPlayers extends Component {
     }
     console.log("Added value");
   });
-  //this.pushCharacterCard();
 
-  /*while (check) {
-    // gameRef.child(code).once('value', snapshot => {
-    //   if (snapshot.val() !== null) {
-    //     totalFinalPlayers = snapshot.val().numPlayers;
-    //     console.log(totalFinalPlayers);
-    //   }
-    // })
-    // // Players path is of the form {gamecode}-players
-    // playersRef.child(playersPath).once('value', snapshot => {
-    //   if (snapshot.val() != null) {
-    //     totalCurrentPlayers = snapshot.val().totalNumPlayers;
-    //     console.log(totalCurrentPlayers);
-    //   }
-    // })
-    // As soon as all the players are on you can start, push the character cards!
-    // console.log(totalCurrentPlayers);
-    // console.log(totalFinalPlayers);
-    gameRef.child(code).once('value', snapshot => {
-      var totalFinalPlayers = snapshot.val().numPlayers;
-      console.log('totalFinalPlayers: ' + totalFinalPlayers);
-      playersRef.child(playersPath).once('value', snapshot => {
-        var totalCurrentPlayers = snapshot.val().totalNumPlayers;
-        console.log('totalCurrentPlayers: ' + totalCurrentPlayers)
-        if(totalFinalPlayers == totalCurrentPlayers) {
-          check = false;
-          return;
-        }
-      })
-    })
-    // var check = this.checkNumberPlayers(code,playersPath);
-    // console.log('check: ' + check);
-  }*/
 
 }
 
@@ -135,7 +103,8 @@ export default class ConnectingPlayers extends Component {
         id: 'PlayerCards',
         role: "Warlord",
         status: 1,
-        gameId: this.props.gameId+'-players',
+        gameId: this.props.gameId,
+				playerId: this.props.playerId
       });
     }
     else{
@@ -143,7 +112,7 @@ export default class ConnectingPlayers extends Component {
         id: 'PlayerCards',
         role: "Citizen",
         status: 1,
-        gameId: this.props.gameId+'-players',
+        gameId: this.props.gameId,
         playerId: this.props.playerId
       });
     }

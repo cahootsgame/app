@@ -19,15 +19,18 @@ class PlayerCards extends Component {
 
   getVotePate(){
       var code = this.props.gameId;
+			//var codePlayers =
+			console.log("The code is " + this.props.gameId);
       gameRef.child(code).on('child_changed', snapshot =>{
         var value = snapshot.val();
         var key = snapshot.key;
+				console.log("IN GETVOTEPATE");
         console.log(key);
         console.log(value);
         if((key === 'cahootVote') && (value === 1)){
             this.props.navigator.push({
             id: 'VotingPage',
-            gameId: codePlayers,
+            gameId: code+'-player'
           })
         }
       });
@@ -56,23 +59,20 @@ class PlayerCards extends Component {
   }
 
   checkStatus(){
-    while(true){
-      var status;
-      playersRef.child(this.props.gameId+"/2").once('value', snapshot => {
-        if (snapshot.val() != null) {
-          status = snapshot.val().status;
-          console.log(status);
-        }
-        if(status === 0){
-          this.setState({citizenTitle: "You were a Citizen.", citizenBody: "Now you are DEAD."});
-        }
-      })
-    }
+		var code = this.props.gameId+'-players/2'
+		playersRef.child(code).on('child_changed', snapshot =>{
+			var key = snapshot.key;
+			var value = snapshot.val();
+			if((key === 'status') && (value === 0)){
+				this.setState({citizenTitle: "You were a Citizen.", citizenBody: "Now you are DEAD."});
+			}
+		});
   }
 
   componentDidMount(){
+		console.log("The props player id is " + this.props.playerId);
     if(this.props.playerId == 2){
-      this.checkStatus();
+      //this.checkStatus();
     }
     if(this.props.playerId == 1) {
       this.getVotePate();

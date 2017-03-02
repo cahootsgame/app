@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import TouchableButton from './touchableButton.js';
+import * as firebase from 'firebase';
+import fb from './firebaseConfig.js'
 
 
 
@@ -26,7 +28,7 @@ export default class VotingPage extends Component {
     this.state = {
       //data: ds.cloneWithRows(this._genRows({}))
       data: ds.cloneWithRows([
-        'Duaa', 'Rithu', 'Saif', 'Sheethal'
+        'Duaa', 'Sheethal'
       ])
     }
   }
@@ -51,6 +53,9 @@ export default class VotingPage extends Component {
 
     completeVote(){
       console.log('yo');
+			firebase.database().ref('Players/' + this.props.gameId  + '-players/2').update({
+				'status': 0
+			})
       this.props.navigator.push({
         id: 'VotingResults'
       })
