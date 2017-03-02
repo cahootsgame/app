@@ -5,7 +5,7 @@ import {EnterGameCode, GenerateGameCode} from './loadGame.js'
 import ConnectingPlayers from './ConnectingPlayers.js';
 import NumberOfPlayers from './numberOfPlayers.js'
 import ChooseTheme from './chooseTheme.js'
-import VotingPage from './VotingPage.js'
+import VotingPage from './votingPage.js'
 
 import {
   AppRegistry,
