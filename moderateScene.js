@@ -8,7 +8,7 @@ import * as firebase from 'firebase';
 import React, { Component } from 'react';
 import {EnterGameCode, GenerateGameCode} from './loadGame.js';
 import TouchableButton from './touchableButton';
-import fb from './firebaseConfig.js'
+import fb from './firebaseConfig.js';
 
 var database = firebase.database();
 var gameRef = database.ref().child('Game');
