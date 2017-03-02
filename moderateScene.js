@@ -21,39 +21,34 @@ import {
 // Can we assign player IDs here?
 
 
-export default class LandingPage extends Component {
+export default class ModeratorActions extends Component {
 
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-         Cahoots!
+         Moderator
         </Text>
-        <Text>Current Scene: {this.props.title}</Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
-        <TouchableButton onButtonClick={this.onPressStartNewGame.bind(this)} text={"Start new game"}/>
-        <TouchableButton onButtonClick={this.onPressConnectGame.bind(this)} text={"Connect to an existing game"}/>
+        <TouchableButton onButtonClick={this.onPressCahootsVote.bind(this)} text={"Initiate Cahoots Vote"}/>
+        <TouchableButton onButtonClick={this.onPressAllVote.bind(this)} text={"Initiate Everyone Vote"}/>
       </View>
     );
   }
+  onPressCahootsVote(){
+    console.log("CAHOOT VOTE PRESSED")
+    // This should add a value to the database to indicate that all cahoots screens should change to vote on who to kill off
 
-  onPressStartNewGame(){
-    console.log("START NEW GAME PRESSED")
-    this.props.navigator.push({
+    /*this.props.navigator.push({
       id: 'GenerateGameCode'
-    })
+    })*/
 
   }
 
-  onPressConnectGame() {
-    console.log("CONNECT TO GAME PRESSED");
-		this.props.navigator.push({
-			id: 'EnterGameCode'
-		})
-        // This component will be pushed onto the stack
+  onPressEveryoneVote() {
+    console.log("EVERYONE VOTE PRESSED");
+    /*this.props.navigator.push({
+      id: 'EnterGameCode'
+    })*/
   }
 }
 

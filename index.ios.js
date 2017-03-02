@@ -3,6 +3,8 @@
 import React, { Component } from 'react';
 import LandingPage from './landingPage'
 import {EnterGameCode, GenerateGameCode} from './loadGame.js'
+import ConnectingPlayers from './ConnectingPlayers.js';
+
 
 import {
   AppRegistry,
@@ -39,8 +41,8 @@ class Cahoots extends Component {
 			case 'GenerateGameCode':
 				return(<GenerateGameCode navigator={navigator} title="Enter new game code" />);
 
-			case 'CollectingPlayers':
-				return(<LandingPage navigator={navigator} title="Start new game or connect"/>)
+			case 'ConnectingPlayers':
+				return(<ConnectingPlayers navigator={navigator} title="Wait for players to connect" gameId={route.gameId}/>);
     }
   }
 }

@@ -1,26 +1,21 @@
 import * as firebase from 'firebase';
 import React, { Component } from 'react';
-import TouchableButton from './touchableButton.js';
+import ConnectingPlayers from './ConnectingPlayers.js';
+import TouchableButton from './touchableButton.js'
+import fb from './firebaseConfig.js'
+
 import {
   AppRegistry,
+  Alert,
   StyleSheet,
   Text,
   View,
 	TextInput
 } from 'react-native';
 
-// Initialize Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyArfU8f0pHRY2YZeuIYc-M94K45Ux2nqaM",
-  authDomain: "cahoots-46db1.firebaseapp.com",
-  databaseURL: "https://cahoots-46db1.firebaseio.com",
-  storageBucket: "cahoots-46db1.appspot.com",
-};
-
-firebase.initializeApp(firebaseConfig);
-
 var database = firebase.database();
 var gameRef = database.ref().child('Game');
+var playersRef = database.ref().child('Players');
 
 export class GenerateGameCode extends Component{
 	constructor(props){
@@ -33,13 +28,26 @@ export class GenerateGameCode extends Component{
 	pushNewGame(){
 		//This function pushes a new Game to the database.
 		this.state.gameId = Math.random().toString(36).substr(2, 6); //Generate an alphanumeric 6 digit string
-		//var gameRef = database.ref().child('Game');
-
+		
+		var playersEntry = this.state.gameId.concat("-players");
+		var playersEntryWithSlash = this.state.gameId.concat("-players/");
+		var PlayerPath = 'Players/'.concat(playersEntryWithSlash);
+		
 		firebase.database().ref('Game/' + this.state.gameId).set({
 			'adminId': 0,
 			'numPlayers': 6,
 			'theme': 0,
-			'players': [0]
+			//'players': [0]
+		})
+		firebase.database().ref('Players/' + playersEntry).set({
+			'gameId': this.state.gameId,
+			'totalNumPlayers': 1	
+		})
+
+		firebase.database().ref(PlayerPath + 0).set({
+			'id': 0,
+			'ismoderator': 1,
+			'status': 'NA',
 		})
 	}
 
@@ -54,6 +62,8 @@ export class GenerateGameCode extends Component{
           Game ID: {this.state.gameId}
         </Text>
       </View>
+
+      // IF state.
     );
   }
 }
@@ -66,26 +76,40 @@ export class EnterGameCode extends Component {
 		}
 	}
 
-	pushPlayer(arr, code){
-		gameRef.child(code).set({'players': arr});
+	pushPlayer(code){
+
+		// overwriting entire game, want to just set player field
+		//gameRef.child(code).players.push({'players': arr});
 		this.props.navigator.push({
-			id: 'CollectingPlayers'
+			id: 'ConnectingPlayers',
+			gameId: code
 		})
 
 	}
 
 	connectPlayers(code){
+
 		if(code){
 			gameRef.child(code).once('value', snapshot => {
 				if(snapshot.val() !== null){
-					//We know the game exists so add teh player to the game
+
 					console.log("Game exists");
-					var oldArr = snapshot.val().players; //returns an array of players.
-					oldArr.push(1);
-					this.pushPlayer(oldArr, code);
+					//We know the game exists so add teh player to the game
+					var playersEntry = code.concat("-players/");
+					var playerPath = 'Players/'.concat(playersEntry);
+
+					firebase.database().ref(playerPath + 1).set({
+						'id': 1,
+						'ismoderator': 0,
+						'status': 'alive',
+					})
+					//database.ref.child(PlayersEntry).set(totalCurrPlayers + 1)
+					this.pushPlayer(code);
 				}
-				else{
+
+				else {
 					console.log("Error the game doesn't exist");
+					Alert.alert('Invalid Game Code','The game code you have entered does not exist, please try again.',[{text: 'OK', onPress: () => console.log('OK Pressed')}], { cancelable: false });
 				}
 			})
 		}
@@ -95,13 +119,11 @@ export class EnterGameCode extends Component {
   render() {
     return (
       <View style={styles.container}>
-			<TextInput
-		 		style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+		<TextInput style={{height: 40, borderColor: 'gray', borderWidth: 1}}
 		 onChangeText={(text) => this.setState({text})}
-		 value={this.state.text}
-	 />
-	 <TouchableButton onButtonClick={()=>this.connectPlayers(this.state.text)} text={"Join game"}/>
+		 value={this.state.text} />
 
+	 		<TouchableButton onButtonClick={()=>this.connectPlayers(this.state.text)} text={"Join game"}/>
       </View>
     );
   }
