@@ -1,6 +1,6 @@
 import React, { Component, } from 'react'
 import TouchableButton from './touchableButton';
-import EnterGameCode from './loadNewGame.js';
+import GenerateGameCode from './loadGame.js';
 import NumberOfPlayers from './numberOfPlayers';
 
 import { View, Navigator, Picker } from 'react-native'
@@ -39,7 +39,7 @@ class ChooseTheme extends Component {
   onPressNext(){
     console.log("Next pressed in choose theme")
     this.props.navigator.push({
-      id: 'EnterGameCode'
+      id: 'GenerateGameCode'
     })
   }
 
