@@ -56,10 +56,13 @@ class PlayerCards extends Component {
     }
   }
 
-  render() {
-    if(this.props.playerId === 2){
-      checkStatus();
+  componentDidMount(){
+    if(this.props.playerId == 2){
+      this.checkStatus();
     }
+  }
+
+  render() {
     switch (this.props.role) {
         case 'Citizen':
           return (
@@ -83,11 +86,6 @@ class PlayerCards extends Component {
             </View>
           );
       }
-      return (
-        <View>
-        <Text>Default</Text>
-        </View>
-      );
     }
 }
 
