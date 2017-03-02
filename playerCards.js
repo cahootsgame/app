@@ -24,7 +24,7 @@ class PlayerCards extends Component {
         var key = snapshot.key;
         console.log(key);
         console.log(value);
-        if((key === 'cahootsVote') && (value === 1)){
+        if((key === 'cahootVote') && (value === 1)){
             this.props.navigator.push({
             id: 'VotingPage',
             gameId: codePlayers,
@@ -75,8 +75,8 @@ class PlayerCards extends Component {
       this.checkStatus();
     }
     if(this.props.playerId == 1) {
-      getVotePate();
-    } 
+      this.getVotePate();
+    }
   }
 
   render() {
