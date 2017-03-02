@@ -28,11 +28,11 @@ export class GenerateGameCode extends Component{
 	pushNewGame(){
 		//This function pushes a new Game to the database.
 		this.state.gameId = Math.random().toString(36).substr(2, 6); //Generate an alphanumeric 6 digit string
-		
+
 		var playersEntry = this.state.gameId.concat("-players");
 		var playersEntryWithSlash = this.state.gameId.concat("-players/");
 		var PlayerPath = 'Players/'.concat(playersEntryWithSlash);
-		
+
 		firebase.database().ref('Game/' + this.state.gameId).set({
 			'adminId': 0,
 			'numPlayers': 4,
@@ -41,7 +41,7 @@ export class GenerateGameCode extends Component{
 		})
 		firebase.database().ref('Players/' + playersEntry).set({
 			'gameId': this.state.gameId,
-			'totalNumPlayers': 1	
+			'totalNumPlayers': 1
 		})
 
 		firebase.database().ref(PlayerPath + 0).set({
@@ -54,12 +54,19 @@ export class GenerateGameCode extends Component{
 		this.pushNewGame();
 	}
 
+  onPressBack() {
+    console.log("Back pressed in game id screen")
+    this.props.navigator.pop();
+  }
+
   render() {
     return (
       <View style={styles.container}>
+      <Text style={styles.title}>Tell your friends!</Text>
         <Text style={styles.welcome}>
           Game ID: {this.state.gameId}
         </Text>
+        <TouchableButton style={styles.back} text={"BACK"} onButtonClick={this.onPressBack.bind(this)}/>
       </View>
 
       // IF state.
@@ -116,8 +123,8 @@ export class EnterGameCode extends Component {
 			debugger;
        		if (snapshot.val() != null) {
        			totalCurrentPlayers = snapshot.val().totalNumPlayers;
-       			totalCurrentPlayers = totalCurrentPlayers + 1;   			
-        		database.ref(playerPath).update({'totalNumPlayers': totalCurrentPlayers}); 
+       			totalCurrentPlayers = totalCurrentPlayers + 1;
+        		database.ref(playerPath).update({'totalNumPlayers': totalCurrentPlayers});
         		this.addPlayerToDatabase(code,totalCurrentPlayers);
       		}
     	})
@@ -125,19 +132,20 @@ export class EnterGameCode extends Component {
 	}
 
 	onPressBack() {
-    console.log("Back pressed in choose theme")
+    console.log("Back pressed in enter game code screen")
     this.props.navigator.pop();
   }
 
   render() {
     return (
       <View style={styles.container}>
-		<TextInput style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+      <Text style={styles.title}>Please enter a Game ID:</Text>
+		<TextInput style={styles.input}
 		 onChangeText={(text) => this.setState({text})}
 		 value={this.state.text} />
 
-	 		<TouchableButton onButtonClick={()=>this.connectPlayers(this.state.text)} text={"JOIN GAME"}/>
-	 		<TouchableButton onButtonClick={this.onPressBack.bind(this)} text={"BACK"}/>
+	 		<TouchableButton style={styles.back} onButtonClick={()=>this.connectPlayers(this.state.text)} text={"JOIN GAME"}/>
+	 		<TouchableButton style={styles.back} onButtonClick={this.onPressBack.bind(this)} text={"BACK"}/>
       </View>
     );
 
@@ -145,20 +153,43 @@ export class EnterGameCode extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  back: {
+    marginTop: 55,
+    marginLeft: 5,
+    height: 10,
+    width: 20
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    width: 300,
+    borderRadius: 5,
+    marginBottom: 30,
+    margin: 38
+  },
+  /*container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-  },
+  },*/
   welcome: {
     fontSize: 20,
     textAlign: 'center',
-    margin: 10,
+    margin: 100,
+    marginTop: 100
   },
-  instructions: {
+  title: {
+    fontSize: 40,
+    textAlign: 'center',
+    marginTop: 120,
+    marginBottom: 10,
+    fontWeight: "100",
+  },
+  /*instructions: {
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
-  },
+  },*/
 });
