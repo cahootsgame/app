@@ -45,12 +45,12 @@ export default class ModeratorActions extends Component {
   onPressCahootsVote(){
     console.log("CAHOOT VOTE PRESSED")
     var code = this.props.gameId
-    var gamePath = 'Game/'.concat(code); 
+    var gamePath = 'Game/'.concat(code);
     gameRef.child(code).once('value', snapshot => {
       if(snapshot.val() !== null){
         console.log("Game exists");
         // ACTIVATE VOTE FOR CAHOOTS
-        database.ref(gamePath).update({'cahootVote': 1}); 
+        database.ref(gamePath).update({'cahootVote': 1});
       }
     })
   }
