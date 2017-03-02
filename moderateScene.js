@@ -31,19 +31,25 @@ export default class ModeratorActions extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
+      <View>
+        <Text style={styles.title}>
          Moderator
         </Text>
         <TouchableButton onButtonClick={this.onPressCahootsVote.bind(this)} text={"Initiate Cahoots Vote"}/>
         <TouchableButton onButtonClick={this.onPressAllVote.bind(this)} text={"Initiate Everyone Vote"}/>
+        <TouchableButton onButtonClick={this.onPressBack.bind(this)} text={"BACK"}/>
       </View>
     );
   }
 
+  onPressBack(){
+    console.log("Back pressed in choose theme")
+    this.props.navigator.pop();
+  }
+
   // PASS CODE AS PROP
   onPressCahootsVote(){
-    console.log("CAHOOT VOTE PRESSED")
+    console.log("CAHOOT VOTE PRESSED");
     var code = this.props.gameId
     var gamePath = 'Game/'.concat(code);
     gameRef.child(code).once('value', snapshot => {
@@ -63,15 +69,12 @@ export default class ModeratorActions extends Component {
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
+  title: {
+    fontSize: 40,
     textAlign: 'center',
-    margin: 10,
+    marginTop: 200,
+    marginBottom: 40,
+    fontWeight: "100",
   },
   instructions: {
     textAlign: 'center',
