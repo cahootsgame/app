@@ -28,7 +28,7 @@ export default class VotingPage extends Component {
     this.state = {
       //data: ds.cloneWithRows(this._genRows({}))
       data: ds.cloneWithRows([
-        'Duaa', 'Sheethal'
+        'Duaa', 'Sheethala'
       ])
     }
   }

@@ -9,6 +9,7 @@ import ChooseTheme from './chooseTheme.js';
 import VotingPage from './votingPage.js';
 import PlayerCards from './playerCards.js';
 import VotingResults from './votingResults.js';
+import Login from './login.js';
 
 
 import {
@@ -27,27 +28,30 @@ class Cahoots extends Component {
     return (
 
       <Navigator
-        initialRoute={{id: 'LandingPage'}}
+        initialRoute={{id: 'Login'}}
         renderScene={this.navigatorRenderScene}/>
 
     );
   }
 
   navigatorRenderScene(route,navigator){
-    console.log("NAVIGATOR RENDER SCENE RUNS")
+    console.log("NAVIGATOR RENDER SCENE RUNS and route.id is "+route.id)
     _navigator = navigator;
     switch (route.id) {
+      case 'Login':
+        return (<Login navigator={navigator} title="login"/>);
+
       case 'LandingPage':
         return (<LandingPage navigator={navigator} title="Start new game or connect"/>);
 
       case 'EnterGameCode':
         return (<EnterGameCode navigator={navigator} title="Enter new game code"/>);
 
-      case 'GenerateGameCode':
-        return(<GenerateGameCode navigator={navigator} title="Enter new game code" />);
+			case 'GenerateGameCode':
+				return(<GenerateGameCode navigator={navigator} title="Enter new game code" />);
 
-      case 'ConnectingPlayers':
-        return(<ConnectingPlayers navigator={navigator} title="Wait for players to connect" gameId={route.gameId} playerId={route.playerId}/>);
+			case 'ConnectingPlayers':
+				return(<ConnectingPlayers navigator={navigator} title="Wait for players to connect" gameId={route.gameId} playerId={route.playerId}/>);
 
       case 'NumberOfPlayers':
         return (<NumberOfPlayers navigator={navigator} title="Enter the number of players"/>);
@@ -59,7 +63,7 @@ class Cahoots extends Component {
       case 'PlayerCards':
         return(<PlayerCards navigator={navigator} title="Wait for players to connect" role={route.role} status={route.status} gameId={route.gameId} playerId={route.playerId}/>);
       case 'VotingPage':
-          return(<VotingPage navigator={navigator} gameId={route.gameId}/>);
+          return(<VotingPage navigator={navigator} />);
       case 'VotingResults':
           return(<VotingResults navigator={navigator} />);
     }
