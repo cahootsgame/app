@@ -80,6 +80,7 @@ const styling = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
+    marginTop: 100
   },
   /*instructions: {
     textAlign: 'center',

@@ -3,7 +3,7 @@ import TouchableButton from './touchableButton';
 import EnterGameCode from './loadNewGame.js';
 import NumberOfPlayers from './numberOfPlayers';
 
-import { View, Navigator, Picker } from 'react-native'
+import { View, Navigator, Picker, StyleSheet, Text } from 'react-native'
 
 class ChooseTheme extends Component {
 
@@ -20,6 +20,7 @@ class ChooseTheme extends Component {
   render() {
     return (
     <View>
+    <Text style={styles.title}>Please choose the theme for the game:</Text>
     <Picker
       selectedValue={this.state.theme}
       onValueChange={(themeChosen) => this.setState({theme: themeChosen})}>
@@ -48,5 +49,15 @@ class ChooseTheme extends Component {
     this.props.navigator.pop();
   }
 }
+
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 40,
+    textAlign: 'center',
+    marginTop: 120,
+    marginBottom: 10,
+    fontWeight: "100",
+  },
+});
 
 export default ChooseTheme

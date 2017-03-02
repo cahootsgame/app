@@ -1,7 +1,7 @@
 import React, { Component, } from 'react'
 import TouchableButton from './touchableButton';
 import ChooseTheme from './chooseTheme';
-import { View, Navigator, Picker } from 'react-native'
+import { View, Navigator, Picker, Text, StyleSheet } from 'react-native'
 
 class NumberOfPlayers extends Component {
 
@@ -17,6 +17,7 @@ class NumberOfPlayers extends Component {
   render() {
     return (
     <View>
+    <Text style={styles.title}>Please choose the number of players:</Text>
     <Picker
       selectedValue={this.state.numOfPlayers}
       onValueChange={(num) => {this.setState({numOfPlayers: num});}}>
@@ -42,5 +43,15 @@ class NumberOfPlayers extends Component {
     this.props.navigator.pop();
   }
 }
+
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 40,
+    textAlign: 'center',
+    marginTop: 120,
+    marginBottom: 10,
+    fontWeight: "100",
+  },
+});
 
 export default NumberOfPlayers
