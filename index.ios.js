@@ -59,7 +59,7 @@ class Cahoots extends Component {
       case 'PlayerCards':
         return(<PlayerCards navigator={navigator} title="Wait for players to connect" role={route.role} status={route.status} gameId={route.gameId} playerId={route.playerId}/>);
       case 'VotingPage':
-          return(<VotingPage navigator={navigator} />);
+          return(<VotingPage navigator={navigator} gameId={route.gameId}/>);
       case 'VotingResults':
           return(<VotingResults navigator={navigator} />);
     }

@@ -30,7 +30,7 @@ class PlayerCards extends Component {
         if((key === 'cahootVote') && (value === 1)){
             this.props.navigator.push({
             id: 'VotingPage',
-            gameId: code+'-player'
+            gameId: code
           })
         }
       });
@@ -59,10 +59,13 @@ class PlayerCards extends Component {
   }
 
   checkStatus(){
-		var code = this.props.gameId+'-players/2'
+		console.log("The game id in CHECK STATUS IS " + this.props.gameId);
+		var code = this.props.gameId+'-players';
 		playersRef.child(code).on('child_changed', snapshot =>{
 			var key = snapshot.key;
 			var value = snapshot.val();
+			console.log("The key in CHECK STATUS IS" + key);
+			console.log("the value in CHECK STATUS IS " + value);
 			if((key === 'status') && (value === 0)){
 				this.setState({citizenTitle: "You were a Citizen.", citizenBody: "Now you are DEAD."});
 			}
@@ -72,7 +75,7 @@ class PlayerCards extends Component {
   componentDidMount(){
 		console.log("The props player id is " + this.props.playerId);
     if(this.props.playerId == 2){
-      //this.checkStatus();
+      this.checkStatus();
     }
     if(this.props.playerId == 1) {
       this.getVotePate();
