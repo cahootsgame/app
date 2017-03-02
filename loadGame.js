@@ -116,6 +116,11 @@ export class EnterGameCode extends Component {
 
 	}
 
+	onPressBack() {
+    console.log("Back pressed in choose theme")
+    this.props.navigator.pop();
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -123,9 +128,11 @@ export class EnterGameCode extends Component {
 		 onChangeText={(text) => this.setState({text})}
 		 value={this.state.text} />
 
-	 		<TouchableButton onButtonClick={()=>this.connectPlayers(this.state.text)} text={"Join game"}/>
+	 		<TouchableButton onButtonClick={()=>this.connectPlayers(this.state.text)} text={"JOIN GAME"}/>
+	 		<TouchableButton onButtonClick={this.onPressBack.bind(this)} text={"BACK"}/>
       </View>
     );
+
   }
 }
 
