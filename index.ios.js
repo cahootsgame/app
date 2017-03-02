@@ -7,7 +7,8 @@ import NumberOfPlayers from './numberOfPlayers.js';
 import ChooseTheme from './chooseTheme.js';
 import VotingPage from './votingPage.js';
 import PlayerCards from './playerCards.js';
-//import VotingPage from './VotingPage.js'
+import VotingResults from './votingResults.js';
+
 
 import {
   AppRegistry,
@@ -55,10 +56,11 @@ class Cahoots extends Component {
 
       case 'PlayerCards':
         return(<PlayerCards navigator={navigator} title="Wait for players to connect" role={route.role} status={route.status} gameId={route.gameId} playerId={route.playerId}/>);
+      case 'VotingPage':
+          return(<VotingPage navigator={navigator} />);
+      case 'VotingResults':
+          return(<VotingResults navigator={navigator} />);
 
-
-      //case 'VotingPage':
-       //   return(<VotingPage navigator={navigator} />);
     }
   }
 }
