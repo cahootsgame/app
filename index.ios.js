@@ -3,10 +3,12 @@ import React, { Component } from 'react';
 import LandingPage from './landingPage'
 import {EnterGameCode, GenerateGameCode} from './loadGame.js'
 import ConnectingPlayers from './ConnectingPlayers.js';
-import NumberOfPlayers from './numberOfPlayers.js'
+import NumberOfPlayers from './numberOfPlayers.js';
 import ChooseTheme from './chooseTheme.js';
 import VotingPage from './votingPage.js';
+import PlayerCards from './playerCards.js';
 import VotingResults from './votingResults.js';
+
 
 import {
   AppRegistry,
@@ -44,7 +46,7 @@ class Cahoots extends Component {
 				return(<GenerateGameCode navigator={navigator} title="Enter new game code" />);
 
 			case 'ConnectingPlayers':
-				return(<ConnectingPlayers navigator={navigator} title="Wait for players to connect" gameId={route.gameId}/>);
+				return(<ConnectingPlayers navigator={navigator} title="Wait for players to connect" gameId={route.gameId} playerId={route.playerId}/>);
 
       case 'NumberOfPlayers':
         return (<NumberOfPlayers navigator={navigator} title="Enter the number of players"/>);
@@ -52,10 +54,13 @@ class Cahoots extends Component {
       case 'ChooseTheme':
         return (<ChooseTheme navigator={navigator} title="Choose the theme"/>);
 
+      case 'PlayerCards':
+        return(<PlayerCards navigator={navigator} title="Wait for players to connect" role={route.role} status={route.status} gameId={route.gameId} playerId={route.playerId}/>);
       case 'VotingPage':
           return(<VotingPage navigator={navigator} />);
       case 'VotingResults':
           return(<VotingResults navigator={navigator} />);
+
     }
   }
 }

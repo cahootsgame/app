@@ -1,5 +1,9 @@
 import React, { Component, } from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
+import fb from './firebaseConfig.js';
+
+var database = fb.database();
+var playersRef = database.ref().child('Players');
 
 class PlayerCards extends Component {
 
@@ -8,54 +12,101 @@ class PlayerCards extends Component {
   static defaultProps = {}
 
   constructor(props) {
-    //playerNum
     super(props)
-    //this.state = {characters5: ["Warlord", "Henchman", "Citizen", "Citizen", "Citizen"]}
+    this.state = {citizenTitle: "You are a Citizen", citizenBody: "You do not have any special powers but keep an eye out for the bad guys so you can exile them."}
   }
-  //TODO: ALl this needs to be moved to the loading page!
-  /*shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
-      // Pick a remaining element...
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-      // And swap it with the current element.
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
+
+  /*getVotePate(){
+    if (this.props.playerId === 1) {
+      var code = this.props.gameId
+      var gamePath = 'Game/'.concat(code);
+      var ret;
+      var codePlayers;
+      while (true) {
+        gameRef.child(code).once('value', snapshot => {
+          if(snapshot.val() !== null) {
+            // Moderator clicked the button for voting
+            ret = snapshot.val().cahootVote;
+            codePlayers = code.concat('-players')
+            if (ret === 1) {
+              this.props.navigator.push({
+                id: 'VotingPage',
+                gameId: codePlayers,
+              })
+              break;
+            }
+          }
+        })
+      }
     }
-    return array;
   }*/
 
-  render() {
-    //shuffle(this.state.characters5);
-    //var shuffledArr = this.state.characters5;
-    //var role = shuffledArr[this.props.playerNum];
-    switch this.props.role {
-      case 'Citizen':
-        return (
-          <View>
-            <Text>You are a Citizen</Text>
-            <Text>You do not have any special powers but keep an eye out for the bad guys so you can exile them.</Text>
-          </View>
-        );
-      case 'Henchman':
-        return (
-          <View>
-            <Text>You are a Henchman</Text>
-            <Text>You are one of the bad guys, be discrete so no one can find you.</Text>
-          </View>
-        );
-      case 'Warlord':
-        return (
-          <View>
-            <Text>You are a Warlord</Text>
-            <Text>You are one of the bad guys, be discrete so no one can find you.</Text>
-          </View>
-        );
+  checkStatus(){
+    while(true){
+      var status;
+      playersRef.child(this.props.gameId+"/2").once('value', snapshot => {
+        if (snapshot.val() != null) {
+          status = snapshot.val().status;
+          console.log(status);
+        }
+        if(status === 0){
+          this.setState({citizenTitle: "You were a Citizen.", citizenBody: "Now you are DEAD."});
+        }
+      })
     }
   }
+
+  render() {
+    if(this.props.playerId === 2){
+      checkStatus();
+    }
+    switch (this.props.role) {
+        case 'Citizen':
+          return (
+            <View>
+              <Text style={styles.title}>{this.state.citizenTitle}</Text>
+              <Text style={styles.body}>{this.state.citizenBody}</Text>
+            </View>
+          );
+        /*case 'Henchman':
+          return (
+            <View>
+              <Text>You are a Henchman</Text>
+              <Text>You are one of the bad guys, be discrete so no one can find you.</Text>
+            </View>
+          );*/
+        case 'Warlord':
+          return (
+            <View>
+              <Text style={styles.title}>You are a Warlord</Text>
+              <Text style={styles.body}>You are one of the bad guys, be discrete so no one can find you.</Text>
+            </View>
+          );
+      }
+      return (
+        <View>
+        <Text>Default</Text>
+        </View>
+      );
+    }
 }
+
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 40,
+    textAlign: 'center',
+    marginTop: 200,
+    marginBottom: 10,
+    fontWeight: "100",
+  },
+  body: {
+    fontSize: 20,
+    textAlign: 'center',
+    marginTop: 20,
+    marginBottom: 10,
+    fontWeight: "100",
+    margin: 15
+  }
+});
 
 export default PlayerCards

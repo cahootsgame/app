@@ -1,7 +1,7 @@
 import * as firebase from 'firebase';
 import React, { Component } from 'react';
 import ConnectingPlayers from './ConnectingPlayers.js';
-import TouchableButton from './touchableButton.js'
+import TouchableButton from './touchableButton.js';
 import fb from './firebaseConfig.js'
 
 import {
@@ -21,7 +21,8 @@ export class GenerateGameCode extends Component{
 	constructor(props){
 		super(props);
 		this.state={
-			gameId: ''
+			gameId: '',
+      myId: '',
 		}
 	}
 
@@ -86,7 +87,8 @@ export class EnterGameCode extends Component {
 		// overwriting entire game, want to just set player field
 		this.props.navigator.push({
 			id: 'ConnectingPlayers',
-			gameId: code
+			gameId: code,
+      playerId: this.state.myId,
 		})
 
 	}
@@ -98,7 +100,8 @@ export class EnterGameCode extends Component {
 		gameRef.child(code).once('value', snapshot => {
 			if(snapshot.val() !== null){
 				console.log("Game exists");
-				total = totalNum - 1
+				total = totalNum - 1;
+        this.setState({myId: total});
 				firebase.database().ref(playerPath + total).set({
 					'ismoderator': 0,
 					'status': 'alive',
