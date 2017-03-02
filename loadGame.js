@@ -99,7 +99,7 @@ export class EnterGameCode extends Component {
 		this.props.navigator.push({
 			id: 'ConnectingPlayers',
 			gameId: code,
-      playerId: this.state.myId,
+      		playerId: this.state.myId,
 		})
 
 	}
