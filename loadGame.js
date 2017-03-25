@@ -77,8 +77,9 @@ export class GenerateGameCode extends Component{
         <Text style={styles.welcome}>
           Game ID: {this.state.gameId}
           </Text>
+          <TouchableButton style={styles.back} text={"BACK"} onButtonClick={this.onPressBack.bind(this)}/>
+
         <TouchableButton  onButtonClick={this.onPressModScreen.bind(this)} text={"START"}/>
-        <TouchableButton style={styles.back} text={"BACK"} onButtonClick={this.onPressBack.bind(this)}/>
       </View>
 
       // IF state.
@@ -116,7 +117,8 @@ export class EnterGameCode extends Component {
 				firebase.database().ref(playerPath + total).set({
 					'ismoderator': 0,
 					'status': 1,
-				})
+				});
+				console.log("the myId state is : " + this.state.myId);
 				this.pushConnectingScene(code);
 			}
 
@@ -157,8 +159,8 @@ export class EnterGameCode extends Component {
 		 onChangeText={(text) => this.setState({text})}
 		 value={this.state.text} />
 
+     <TouchableButton style={styles.back} onButtonClick={this.onPressBack.bind(this)} text={"BACK"}/>
 	 		<TouchableButton style={styles.back} onButtonClick={()=>this.connectPlayers(this.state.text)} text={"JOIN GAME"}/>
-	 		<TouchableButton style={styles.back} onButtonClick={this.onPressBack.bind(this)} text={"BACK"}/>
       </View>
     );
 
