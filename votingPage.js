@@ -35,21 +35,6 @@ export default class VotingPage extends Component {
 
   //_pressData({}: {[key: number]: boolean})
 
-  _genRows(pressData: {[key: number]: boolean}): Array<string> {
-    var dataBlob = [];
-    for (var ii = 0; ii < 100; ii++) {
-      var pressedText = pressData[ii] ? ' (X)' : '';
-      dataBlob.push('Cell ' + ii + pressedText);
-    }
-    return dataBlob;
-  }
-
-    _pressRow(rowID) {
-      this.state._pressData[rowID] = !this.state._pressData[rowID];
-      this.setState({dataSource: this.state.dataSource.cloneWithRows(
-        this._genRows(this.state._pressData)
-      )});
-    }
 
     completeVote(){
       console.log('yo');
@@ -63,7 +48,7 @@ export default class VotingPage extends Component {
     }
 
     _renderRow(rowData: string, sectionID: number, rowID: number) {
-      var rowHash = Math.abs(hashCode(rowData));
+      //var rowHash = Math.abs(hashCode(rowData));
       var imgSource = {
         uri: THUMB_URLS[rowHash % THUMB_URLS.length],
       };
