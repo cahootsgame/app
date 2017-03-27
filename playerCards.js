@@ -1,11 +1,13 @@
 import React, { Component, } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, ListView } from 'react-native'
+import {Grid,Row,Col} from 'react-native-easy-grid'
 import fb from './firebaseConfig.js';
+import Swiper from 'react-native-swiper'
+import AllPlayerStatus from './allPlayerStatus'
 
 var database = fb.database();
 var playersRef = database.ref().child('Players');
 var gameRef = database.ref().child('Game');
-
 class PlayerCards extends Component {
 
   static propTypes = {}
@@ -14,7 +16,10 @@ class PlayerCards extends Component {
 
   constructor(props) {
     super(props)
-    this.state = {citizenTitle: "You are a Citizen", citizenBody: "You do not have any special powers but keep an eye out for the bad guys so you can exile them."}
+	 this.state = {
+		 citizenTitle: "You are a Citizen",
+		 citizenBody: "You do not have any special powers but keep an eye out for the bad guys so you can exile them."
+	 };
   }
 
   getVotePate(){
@@ -72,6 +77,11 @@ class PlayerCards extends Component {
 		});
   }
 
+	getPlayerStatus(){
+		//This function gets the player status, and renders them.
+
+	}
+
   componentDidMount(){
 		console.log("The props player id is " + this.props.playerId);
     if(this.props.playerId == 2){
@@ -86,10 +96,17 @@ class PlayerCards extends Component {
     switch (this.props.role) {
         case 'Citizen':
           return (
-            <View>
-              <Text style={styles.title}>{this.state.citizenTitle}</Text>
-              <Text style={styles.body}>{this.state.citizenBody}</Text>
-            </View>
+						<Swiper>
+							<View>
+	              <Text style={styles.title}>{this.state.citizenTitle}</Text>
+	              <Text style={styles.body}>{this.state.citizenBody}</Text>
+	            </View>
+        			<View>
+								<AllPlayerStatus gameId={this.props.gameId}/>
+        			</View>
+
+						</Swiper>
+
           );
         /*case 'Henchman':
           return (
@@ -124,7 +141,24 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontWeight: "100",
     margin: 15
-  }
+  },
+	container: {
+	 alignItems:'center',
+	 justifyContent:'center'
+ },
+ list: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+				alignItems: 'flex-start',
+				justifyContent: 'center',
+    },
+		item: {
+	         backgroundColor: 'blue',
+	         margin: 3,
+	         width: 150,
+					 height: 100
+
+	     }
 });
 
 export default PlayerCards
