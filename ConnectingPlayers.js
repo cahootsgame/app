@@ -33,7 +33,18 @@ export default class ConnectingPlayers extends Component {
     super(props);
     this.state = {
       animating: true,
-      characters4: ["Warlord", "Citizen", "Citizen"]
+      characters4: [{name: "Warlord", assigned: false},
+                    {name: "Citizen", assigned: false},
+                    {name: "Citizen", assigned: false}],
+      characters5: [{name: "Warlord", assigned: false},
+                    {name: "Warlord", assigned: false},
+                    {name: "Citizen", assigned: false},
+                    {name: "Citizen", assigned: false}]
+      characters6: [{name: "Warlord", assigned: false},
+                    {name: "Warlord", assigned: false},
+                    {name: "Citizen", assigned: false},
+                    {name: "Citizen", assigned: false},
+                    {name: "Citizen", assigned: false}]
     };
   }
 
@@ -48,7 +59,15 @@ export default class ConnectingPlayers extends Component {
         this.waitForPlayers();
       }
       else{
-        this.pushCharacterCard();
+        if(totalNum === 4){
+          this.pushCharacterCard(totalNum, characters4);
+        }
+        else if (totalNum === 5){
+          this.pushCharacterCard(totalNum, characters5);
+        }
+        else if (totalNum === 6){
+          this.pushCharacterCard(totalNum, characters6);
+        }
       }
     });
     //this.waitForPlayers();
@@ -89,7 +108,15 @@ export default class ConnectingPlayers extends Component {
     console.log(key);
     console.log(value);
     if((key === 'totalNumPlayers') && (value === 4)){
-      this.pushCharacterCard();
+      if(value === 4){
+        this.pushCharacterCard(value, characters4);
+      }
+      else if (value === 5){
+        this.pushCharacterCard(value, characters5);
+      }
+      else if (value === 6){
+        this.pushCharacterCard(value, characters6);
+      }
     }
     console.log("Added value");
   });
@@ -97,25 +124,60 @@ export default class ConnectingPlayers extends Component {
 
 }
 
-  pushCharacterCard() {
-    if(this.props.playerId === 1){
-      this.props.navigator.push({
+  pushCharacterCard(totalPlayers, array) {
+    var index = Math.floor(Math.random() * (value-2 - 0)) + min; //TODO: must change if moderator situation changes, can't be -2 anymore
+    var code = this.props.gameId;
+    var playersPath = code.concat("-players");
+    playersRef.child(playersPath).once('value', snapshot => {
+      snapshot.forEach(function(childSnapshot) {
+        var charId = childSnapshot.val().charId;
+        array[charId].assigned = true;
+      });
+    });
+    while (array[index].assigned){
+      index = (index === totalPlayers-1) ? 0 : index++;
+    }
+    this.props.navigator.push({
         id: 'PlayerCards',
-        role: "Warlord",
+        role: array[index],
         status: 1,
         gameId: this.props.gameId,
 				playerId: this.props.playerId
-      });
+    });
+    /*var playerRole;
+    if(totalPlayers === 4){
+      playerRole = characters4[index];
     }
-    else{
-      this.props.navigator.push({
-        id: 'PlayerCards',
-        role: "Citizen",
-        status: 1,
-        gameId: this.props.gameId,
-        playerId: this.props.playerId
-      });
+    else if (totalPlayers === 5){
+      playerRole = characters5[index];
     }
+    else {
+      playerRole = characters6[index];
+    }
+    var code = this.props.gameId;
+    var playersPath = code.concat("-players");
+    var done = false;
+    var charId = null;
+    playersRef.child(playersPath).once('value', snapshot => {
+      do {
+        snapshot.forEach(function(childSnapshot) {
+          var charId = childSnapshot.val().charId;
+
+        });
+      }
+      snapshot.forEach(function(childSnapshot) {
+        var charId = childSnapshot.val().charId;
+        if
+      });
+      var totalNum = snapshot.val().totalNumPlayers;
+			console.log("the total number of playres is " + totalNum);
+      if(totalNum !== 4){
+        this.waitForPlayers();
+      }
+      else{
+        this.pushCharacterCard();
+      }
+    });*/
 
   }
 
