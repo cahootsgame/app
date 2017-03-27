@@ -69,18 +69,16 @@ class AllPlayerStatus extends Component {
  }
 
  checkStatus(){
-	 console.log("in check status");
-	var code = this.props.gameId+'-players/2';
+	console.log("in check status");
+	var code = this.props.gameId+'-players';
 	playersRef.child(code).on('child_changed', snapshot =>{
 		console.log("CHANGE OCCURED");
 		var key = snapshot.key;
 		var value = snapshot.val();
-		console.log("The key in CHECK STATUS IS" + key);
-		console.log("the value in CHECK STATUS IS " + value);
-		if(key === 'status'){
-			//this.copyArray(this.state.dataSource._dataBlob.s1.slice(), value)
+		//console.log("The key in CHECK STATUS IS" + key);
+		//console.log("the value in CHECK STATUS IS " + value);
+		//console.log(value);
 			this.getAllPlayers();
-		}
 	});
  }
 

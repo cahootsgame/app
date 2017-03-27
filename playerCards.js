@@ -39,28 +39,6 @@ class PlayerCards extends Component {
           })
         }
       });
-
-    /*if (this.props.playerId === 1) {
-      var code = this.props.gameId
-      var gamePath = 'Game/'.concat(code);
-      var ret;
-      var codePlayers;
-      while (true) {
-        gameRef.child(code).once('value', snapshot => {
-          if(snapshot.val() !== null) {
-            // Moderator clicked the button for voting
-            ret = snapshot.val().cahootVote;
-            codePlayers = code.concat('-players')
-            if (ret === 1) {
-              this.props.navigator.push({
-                id: 'VotingPage',
-                gameId: codePlayers,
-              })
-            }
-          }
-        })
-      }
-    }*/
   }
 
   checkStatus(){
