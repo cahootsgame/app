@@ -93,14 +93,14 @@ export class EnterGameCode extends Component {
 	constructor(props){
 		super(props);
 		this.state={
-			gameId: ''
+			gameId: '',
       characters4: [{name: "Warlord", assigned: false},
                     {name: "Citizen", assigned: false},
                     {name: "Citizen", assigned: false}],
       characters5: [{name: "Warlord", assigned: false},
                     {name: "Warlord", assigned: false},
                     {name: "Citizen", assigned: false},
-                    {name: "Citizen", assigned: false}]
+                    {name: "Citizen", assigned: false}],
       characters6: [{name: "Warlord", assigned: false},
                     {name: "Warlord", assigned: false},
                     {name: "Citizen", assigned: false},
@@ -119,7 +119,32 @@ export class EnterGameCode extends Component {
 
 	}
 
+  assign(numOfPlayers, array, index, code, playerPath, total){
+    console.log("initial index is "+index);
+    while (array[index].assigned){
+      console.log("array[index] is "+array[index]+'and index is '+index);
+      if(index === numOfPlayers-2){
+        index = 0;
+      }
+      else {
+        index++;
+      }
+      console.log('index is now '+index);
+    }
+    firebase.database().ref(playerPath + total).set({
+      'ismoderator': 0,
+      'status': 1,
+      'charId': index,
+      'charName': array[index].name
+    });
+    console.log("the myId state is : " + this.state.myId);
+    console.log("the charId state is : " + index);
+    console.log("the charName state is : " + array[index].name);
+    this.pushConnectingScene(code);
+  }
+
 	addPlayerToDatabase(code, totalNum) {
+    var self = this;
     var numOfPlayers;
     var array;
 		console.log("IN ADD PLAYER")
@@ -130,34 +155,54 @@ export class EnterGameCode extends Component {
 				console.log("Game exists");
 				total = totalNum - 1;
         numOfPlayers = snapshot.val().numPlayers;
-        var index = Math.floor(Math.random() * (totalPlayers-2 - 0)) + min; //TODO: must change if moderator situation changes, can't be -2 anymore
+        var index = Math.floor(Math.random() * (numOfPlayers-2 - 0)) + 0; //TODO: must change if moderator situation changes, can't be -2 anymore
         if (numOfPlayers === 4){
-          array = characters4;
+          array = this.state.characters4;
         }
         else if (numOfPlayers === 5){
-          array = characters5;
+          array = this.state.characters5;
         }
         else if (numOfPlayers === 6){
-          array = characters6;
+          array = this.state.characters6;
         }
 				this.setState({myId: total});
-        playersRef.child(playersEntry).once('value', snapshot => {
+        playersRef.child(playersEntry).once('value').then(function(snapshot){
+          var length = Object.keys(snapshot).length;
+          var count = 1;
           snapshot.forEach(function(childSnapshot) {
             var charId = childSnapshot.val().charId;
-            array[charId].assigned = true;
+            console.log(charId);
+            console.log(array[charId]);
+            if(charId !== -1 && charId !== undefined){
+              array[charId].assigned = true;
+              console.log(array[charId]);
+            }
+            if(count === length){
+              self.assign(numOfPlayers, array, index, code, playerPath, total);
+            }
+            count++;
           });
+          /*console.log("initial index is "+index);
+          while (array[index].assigned){
+            console.log("array[index] is "+array[index]+'and index is '+index);
+            if(index === numOfPlayers-2){
+              index = 0;
+            }
+            else {
+              index++;
+            }
+            console.log('index is now '+index);
+          }*/
         });
-        while (array[index].assigned){
-          index = (index === numOfPlayers-2) ? 0 : index++;
-        }
-				firebase.database().ref(playerPath + total).set({
+
+				/*firebase.database().ref(playerPath + total).set({
 					'ismoderator': 0,
 					'status': 1,
           'charId': index,
-          'charName': array[index]
+          'charName': array[index].name
 				});
 				console.log("the myId state is : " + this.state.myId);
-				this.pushConnectingScene(code);
+				this.pushConnectingScene(code);*/
 			}
 
 			else {

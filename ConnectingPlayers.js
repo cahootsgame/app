@@ -100,16 +100,19 @@ export default class ConnectingPlayers extends Component {
     var code = this.props.gameId;
     var playersPath = code.concat("-players/"+this.props.playerId);
     var name;
-    playersRef.child(playersPath).once('value', snapshot => {
+    var self = this;
+    playersRef.child(playersPath).once('value').then(function(snapshot){
       name = snapshot.val().charName;
+      console.log("IN ConnectingPlayers, AND NAME IS "+name);
+      self.props.navigator.push({
+          id: 'PlayerCards',
+          role: name,
+          status: 1,
+          gameId: self.props.gameId,
+  				playerId: self.props.playerId
+      });
     });
-    this.props.navigator.push({
-        id: 'PlayerCards',
-        role: name,
-        status: 1,
-        gameId: this.props.gameId,
-				playerId: this.props.playerId
-    });
+
     /*var playerRole;
     if(totalPlayers === 4){
       playerRole = characters4[index];
