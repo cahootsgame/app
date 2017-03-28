@@ -160,6 +160,7 @@ export class EnterGameCode extends Component {
 		playersRef.child(playersEntry).once('value', snapshot => {
 			console.log("BEFORE SNAPSHOT NOT = NULL");
        		if (snapshot.val() != null) {
+						console.log("Snapshot valu found");
        			totalCurrentPlayers = snapshot.val().totalNumPlayers;
        			totalCurrentPlayers = totalCurrentPlayers + 1;
         		database.ref(playerPath).update({'totalNumPlayers': totalCurrentPlayers});

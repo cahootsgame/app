@@ -138,25 +138,8 @@ export default class VotingPage extends Component {
     })
   }
 
-  //_pressData({}: {[key: number]: boolean})
 
-/*_genRows(pressData: {[key: number]: boolean}): Array<string> {
-    var dataBlob = [];
-    for (var ii = 0; ii < 100; ii++) {
-      var pressedText = pressData[ii] ? ' (X)' : '';
-      dataBlob.push('Cell ' + ii + pressedText);
-    }
-    return dataBlob;
-  }*/
-
-    /*_pressRow(rowID) {
-      this.state._pressData[rowID] = !this.state._pressData[rowID];
-      this.setState({dataSource: this.state.dataSource.cloneWithRows(
-        this._genRows(this.state._pressData)
-      )});
-    }*/
-
-    completeVote(k,playerToKill) {
+  completeVote(k,playerToKill) {
       var name = playerToKill.name;
 			firebase.database().ref('Players/' + this.props.gameId  + '-players/' + k).update({
 				'status': 0
@@ -168,7 +151,7 @@ export default class VotingPage extends Component {
 
       resetVote();
 
-    }
+  }
 
 
     whichVote(code, whoToKill) {
@@ -198,12 +181,12 @@ export default class VotingPage extends Component {
       }
     }
 
-    renderRow(item) {
-      var rowHash = Math.abs(hashCode(rowData));
-      var imgSource = {
-        uri: THUMB_URLS[rowHash % THUMB_URLS.length],
-      };
-      var whoToKill = item.facebookID
+  renderRow(item) {
+    var rowHash = Math.abs(hashCode(rowData));
+    var imgSource = {
+      uri: THUMB_URLS[rowHash % THUMB_URLS.length],
+    };
+    var whoToKill = item.facebookID
       return (
         <TouchableHighlight onPress={() => this.whichVote(this.props.gameId, whoToKill)}underlayColor='rgba(0,0,0,0)'>
            <View style={styles.row}>
@@ -215,7 +198,7 @@ export default class VotingPage extends Component {
          </TouchableHighlight>
 
       );
-    }
+  }
 
 
 
