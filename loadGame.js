@@ -45,7 +45,7 @@ export class GenerateGameCode extends Component{
 		else if (this.props.numOfPlayers === 6) {
 			numCahoots = 2;
 		}
-
+		console.log("num of players: " + this.props.numOfPlayers)
 		firebase.database().ref('Game/' + this.state.gameId).set({
 			'adminId': 0,
 			'numPlayers': this.props.numOfPlayers,

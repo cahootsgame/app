@@ -45,7 +45,7 @@ class NumberOfPlayers extends Component {
     else if (this.state.numOfPlayers === "six") {
       var num_players = 6;
     }
-
+    console.log("IN NUMEROFPLAYERS: num_players is: " + num_players)
     this.props.navigator.push({
       id: 'ChooseTheme',
       numOfPlayers: num_players

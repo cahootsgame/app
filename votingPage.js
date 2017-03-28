@@ -67,6 +67,7 @@ export default class VotingPage extends Component {
     })
   }
 
+  // PlayerID is the facebook ID of that person that was clicked on to vote off
   addVote(code, playerID) {
       console.log("CALLED WHEN VOTE IS MADE");
       var playersEntry = code.concat("-players");
@@ -76,9 +77,11 @@ export default class VotingPage extends Component {
     playersRef.child(playersEntry).once('value', snapshot => {
       console.log("BEFORE SNAPSHOT NOT = NULL");
         if(snapshot.val() !== NULL){
+          // The number of players that are still left in the game
            totalCurrentPlayers = snapshot.val().totalNumPlayers;
             var numVotes;
-            for(var i = 0; i<totalCurrentPlayers; i++){
+            // TODO: here should we check if the player is dead or not?? Shouldnt ever reach here if the player is dead tbh, cus the button wouldnt have rendered
+            for(var i = 0; i < totalCurrentPlayers; i++){
               var player = snapshot.val()[i];
               if(player.facebookID === playerID){
                 //Someone wanted to kill this player, add 1 to their vote.
@@ -87,6 +90,8 @@ export default class VotingPage extends Component {
                 database.ref(currentPlayerPath).update({'numvotes': numVotes});
               }
             }
+
+            // Check against this value to see if everyones votes are in 
             totalVotes = snapshot.val().total_vote;
             totalVotes = totalVotes + 1;
             database.ref(playerPath).update({'total_vote': totalVotes});
@@ -94,6 +99,7 @@ export default class VotingPage extends Component {
             if (totalVotes === this.state.numPeopleVoting) {
                   this.calculateResult();
             }
+
           }
       })
   }
@@ -117,9 +123,11 @@ export default class VotingPage extends Component {
             playerToKill = player;
             k = i;
           }
+          // RESET their count
           var currentPlayerPath = playerPath + '/' + i;
             database.ref(currentPlayerPath).update({'numvotes': 0});
           }
+          // actually change their status to 0, their dead
           this.completeVote(k,playerToKill);
       }
     })
@@ -148,9 +156,7 @@ export default class VotingPage extends Component {
         id: 'VotingResults',
         nameWhoGotKilled: name
       })
-
       resetVote();
-
   }
 
 
