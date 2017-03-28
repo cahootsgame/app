@@ -16,7 +16,7 @@ export default class LandingPage extends Component {
     return (
       <View>
         <Text style={styles.welcome}>
-         You have Killed Duaa!
+         You have Killed {this.props.name}!
         </Text>
       </View>
     );
