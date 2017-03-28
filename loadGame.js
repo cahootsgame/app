@@ -23,7 +23,7 @@ export class GenerateGameCode extends Component{
 		super(props);
 		this.state={
 			gameId: '',
-			myId: ''
+			myId: '',
 		}
 	}
 
@@ -50,6 +50,8 @@ export class GenerateGameCode extends Component{
 		firebase.database().ref(PlayerPath + 0).set({
 			'ismoderator': 1,
 			'status': -1,
+      'charId': -1,
+      'charName': 'Moderator'
 		})
 	}
 
@@ -92,6 +94,18 @@ export class EnterGameCode extends Component {
 		super(props);
 		this.state={
 			gameId: ''
+      characters4: [{name: "Warlord", assigned: false},
+                    {name: "Citizen", assigned: false},
+                    {name: "Citizen", assigned: false}],
+      characters5: [{name: "Warlord", assigned: false},
+                    {name: "Warlord", assigned: false},
+                    {name: "Citizen", assigned: false},
+                    {name: "Citizen", assigned: false}]
+      characters6: [{name: "Warlord", assigned: false},
+                    {name: "Warlord", assigned: false},
+                    {name: "Citizen", assigned: false},
+                    {name: "Citizen", assigned: false},
+                    {name: "Citizen", assigned: false}]
 		}
 	}
 
@@ -106,6 +120,8 @@ export class EnterGameCode extends Component {
 	}
 
 	addPlayerToDatabase(code, totalNum) {
+    var numOfPlayers;
+    var array;
 		console.log("IN ADD PLAYER")
 		var playersEntry = code.concat("-players/");
 		var playerPath = 'Players/'.concat(playersEntry);
@@ -113,10 +129,32 @@ export class EnterGameCode extends Component {
 			if(snapshot.val() !== null){
 				console.log("Game exists");
 				total = totalNum - 1;
+        numOfPlayers = snapshot.val().numPlayers;
+        var index = Math.floor(Math.random() * (totalPlayers-2 - 0)) + min; //TODO: must change if moderator situation changes, can't be -2 anymore
+        if (numOfPlayers === 4){
+          array = characters4;
+        }
+        else if (numOfPlayers === 5){
+          array = characters5;
+        }
+        else if (numOfPlayers === 6){
+          array = characters6;
+        }
 				this.setState({myId: total});
+        playersRef.child(playersEntry).once('value', snapshot => {
+          snapshot.forEach(function(childSnapshot) {
+            var charId = childSnapshot.val().charId;
+            array[charId].assigned = true;
+          });
+        });
+        while (array[index].assigned){
+          index = (index === numOfPlayers-2) ? 0 : index++;
+        }
 				firebase.database().ref(playerPath + total).set({
 					'ismoderator': 0,
 					'status': 1,
+          'charId': index,
+          'charName': array[index]
 				});
 				console.log("the myId state is : " + this.state.myId);
 				this.pushConnectingScene(code);

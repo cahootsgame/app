@@ -33,18 +33,6 @@ export default class ConnectingPlayers extends Component {
     super(props);
     this.state = {
       animating: true,
-      characters4: [{name: "Warlord", assigned: false},
-                    {name: "Citizen", assigned: false},
-                    {name: "Citizen", assigned: false}],
-      characters5: [{name: "Warlord", assigned: false},
-                    {name: "Warlord", assigned: false},
-                    {name: "Citizen", assigned: false},
-                    {name: "Citizen", assigned: false}]
-      characters6: [{name: "Warlord", assigned: false},
-                    {name: "Warlord", assigned: false},
-                    {name: "Citizen", assigned: false},
-                    {name: "Citizen", assigned: false},
-                    {name: "Citizen", assigned: false}]
     };
   }
 
@@ -59,15 +47,7 @@ export default class ConnectingPlayers extends Component {
         this.waitForPlayers();
       }
       else{
-        if(totalNum === 4){
-          this.pushCharacterCard(totalNum, characters4);
-        }
-        else if (totalNum === 5){
-          this.pushCharacterCard(totalNum, characters5);
-        }
-        else if (totalNum === 6){
-          this.pushCharacterCard(totalNum, characters6);
-        }
+          this.pushCharacterCard();
       }
     });
     //this.waitForPlayers();
@@ -108,15 +88,7 @@ export default class ConnectingPlayers extends Component {
     console.log(key);
     console.log(value);
     if((key === 'totalNumPlayers') && (value === 4)){
-      if(value === 4){
-        this.pushCharacterCard(value, characters4);
-      }
-      else if (value === 5){
-        this.pushCharacterCard(value, characters5);
-      }
-      else if (value === 6){
-        this.pushCharacterCard(value, characters6);
-      }
+        this.pushCharacterCard();
     }
     console.log("Added value");
   });
@@ -124,22 +96,16 @@ export default class ConnectingPlayers extends Component {
 
 }
 
-  pushCharacterCard(totalPlayers, array) {
-    var index = Math.floor(Math.random() * (value-2 - 0)) + min; //TODO: must change if moderator situation changes, can't be -2 anymore
+  pushCharacterCard() {
     var code = this.props.gameId;
-    var playersPath = code.concat("-players");
+    var playersPath = code.concat("-players/"+this.props.playerId);
+    var name;
     playersRef.child(playersPath).once('value', snapshot => {
-      snapshot.forEach(function(childSnapshot) {
-        var charId = childSnapshot.val().charId;
-        array[charId].assigned = true;
-      });
+      name = snapshot.val().charName;
     });
-    while (array[index].assigned){
-      index = (index === totalPlayers-1) ? 0 : index++;
-    }
     this.props.navigator.push({
         id: 'PlayerCards',
-        role: array[index],
+        role: name,
         status: 1,
         gameId: this.props.gameId,
 				playerId: this.props.playerId
