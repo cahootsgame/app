@@ -33,8 +33,22 @@ class NumberOfPlayers extends Component {
 
   onPressNext(){
     console.log("Next pressed in num players")
+    console.log("NUM OF PLAYERS IN STATE" + this.state.numOfPlayers)
+    
+    // ADD VALUE AS STATE;
+    if (this.state.numOfPlayers === "four") {
+      var num_players = 4;
+    }
+    else if (this.state.numOfPlayers === "five") {
+      var num_players = 5;
+    }
+    else if (this.state.numOfPlayers === "six") {
+      var num_players = 6;
+    }
+
     this.props.navigator.push({
-      id: 'ChooseTheme'
+      id: 'ChooseTheme',
+      numOfPlayers: num_players
     })
   }
 

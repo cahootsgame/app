@@ -51,7 +51,6 @@ export default class ConnectingPlayers extends Component {
         this.pushCharacterCard();
       }
     });
-    //this.waitForPlayers();
   }
 
   componentWillUnmount() {
@@ -77,22 +76,22 @@ export default class ConnectingPlayers extends Component {
 
   waitForPlayers() {
 
-  var totalCurrentPlayers;
-  var totalFinalPlayers;
-  var code = this.props.gameId;
-  var playerId = this.props.playerId;
-  var playersPath = code.concat("-players");
-  var check = true;
-  playersRef.child(playersPath).on('child_changed', snapshot =>{
-    var value = snapshot.val()
-    var key = snapshot.key;
-    console.log(key);
-    console.log(value);
-    if((key === 'totalNumPlayers') && (value === 4)){
-      this.pushCharacterCard();
-    }
-    console.log("Added value");
-  });
+    var totalCurrentPlayers;
+    var totalFinalPlayers;
+    var code = this.props.gameId;
+    var playerId = this.props.playerId;
+    var playersPath = code.concat("-players");
+    var check = true;
+    playersRef.child(playersPath).on('child_changed', snapshot =>{
+      var value = snapshot.val()
+      var key = snapshot.key;
+      console.log(key);
+      console.log(value);
+      if((key === 'totalNumPlayers') && (value === 4)){
+        this.pushCharacterCard();
+      }
+      console.log("Added value");
+    });
 
 
 }

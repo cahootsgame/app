@@ -57,12 +57,21 @@ export default class ModeratorActions extends Component {
         console.log("Game exists");
         // ACTIVATE VOTE FOR CAHOOTS
         database.ref(gamePath).update({'cahootVote': 1});
+
       }
     })
   }
 
   onPressAllVote() {
-    console.log("EVERYONE VOTE PRESSED");
+    var code = this.props.gameId;
+    var gamePath = 'Game/'.concat(code);
+    gameRef.child(code).once('value', snapshot => {
+      if(snapshot.val() !== null) {
+        console.log("Game exists");
+        // ACTIVATE VOTE FOR all
+        database.ref(gamePath).update({'everyoneVote': 1});
+      }
+    })
   }
 }
 

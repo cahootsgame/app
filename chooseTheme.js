@@ -40,7 +40,8 @@ class ChooseTheme extends Component {
   onPressNext(){
     console.log("Next pressed in choose theme")
     this.props.navigator.push({
-      id: 'GenerateGameCode'
+      id: 'GenerateGameCode',
+      numOfPlayers: this.props.numOfPlayers
     })
   }
 
