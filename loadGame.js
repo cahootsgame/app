@@ -126,9 +126,9 @@ export class EnterGameCode extends Component {
 
 	addPlayerToDatabase(code, totalNum) {
 		console.log("IN ADD PLAYER")
-		var playersEntry = code.concat("-players/");
-		var playerPath = 'Players/'.concat(playersEntry);
 		gameRef.child(code).once('value', snapshot => {
+			var self = this;
+
 			if(snapshot.val() !== null){
 				console.log("Game exists");
 				total = totalNum - 1;
@@ -141,9 +141,18 @@ export class EnterGameCode extends Component {
 					'ismoderator': 0,
 					'status': 1,
 					'numvotes': 0
-				});
-				console.log("the myId state is : " + this.state.myId);
-				this.pushConnectingScene(code);
+				}, function(error){
+ 						// Callback comes here
+ 						if(error){
+    					console.log(error);
+ 						}
+ 						else{
+    					self.incrementPlayers(playerPath, playersEntry);
+  					}
+					}
+				);
+					console.log("the myId state is : " + this.state.myId);
+					this.pushConnectingScene(code);
 			}
 
 			else {
@@ -164,7 +173,6 @@ export class EnterGameCode extends Component {
 						console.log("Snapshot valu found");
        			totalCurrentPlayers = snapshot.val().totalNumPlayers;
        			totalCurrentPlayers = totalCurrentPlayers + 1;
-        		database.ref(playerPath).update({'totalNumPlayers': totalCurrentPlayers});
         		this.addPlayerToDatabase(code,totalCurrentPlayers);
       		}
       		else {
@@ -174,6 +182,19 @@ export class EnterGameCode extends Component {
     	})
 
 	}
+
+	incrementPlayers(playerPath, playersEntry){
+		playersRef.child(playersEntry).once('value', snapshot => {
+			console.log("BEFORE SNAPSHOT NOT = NULL");
+			    var totalCurrentPlayers;
+					if (snapshot.val() != null) {
+						console.log("Snapshot valu found");
+						totalCurrentPlayers = snapshot.val().totalNumPlayers;
+						totalCurrentPlayers = totalCurrentPlayers + 1;
+						database.ref(playerPath).update({'totalNumPlayers': totalCurrentPlayers});
+					}
+				});
+			}
 
 	onPressBack() {
     console.log("Back pressed in enter game code screen")
