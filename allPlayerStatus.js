@@ -44,25 +44,37 @@ class AllPlayerStatus extends Component {
 	 var code = this.props.gameId+'-players';
 	 playersRef.child(code).once("value")
 	 	.then(function(snapshot) {
+			console.log("BEFORE HE FOR LOOOOOOÔP!!!!!!!!!!!!!!!!")
+			console.log("The snapshot value is");
+			console.log(snapshot.val());
 			//var playerArr = [];
 			var playerArr = [];
 			var key = snapshot.key
 			console.log("The key is" + key);
+			console.log("The ")
 			//snapshot.val() is an object. We know the number of keys, thus iterate through it
 			var totalPlayers = snapshot.val().totalNumPlayers;
 			for(var i = 0; i<totalPlayers; i++){
-				console.log("total num players " +totalPlayers);
-
 				//player is an object which represents player i.
+				console.log("The snapshot value is");
+				console.log(snapshot.val());
+				debugger;
 				var player = snapshot.val()[i];
-				
-				if (player.ismoderator !== 1) {
+				console.log("the i is" + i);
+				console.log("THE PLAYER IS");
+				console.log(player);
+				if(typeof(player) === 'undefined'){
+					console.log("PLAYER UNDEFINED HELP!!!!!!!!!!!!!")
+					continue;
+				}
+				//@TODO : To remove this hardcoded thing
+				//player['name'] = 'player' + i;
+				if(player.ismoderator !== 1){
 					playerArr.push(player);
 					console.log("The player is arr");
 					console.log(playerArr);
 				}
-				//@TODO : To remove this hardcoded thing
-				//player['name'] = 'player' + i;
+
 			}
 			console.log("DONE THE FOR LOOP");
 			console.log(playerArr);
@@ -70,7 +82,7 @@ class AllPlayerStatus extends Component {
 				dataSource: this.state.dataSource.cloneWithRows(playerArr)
 			});
 		}.bind(this));
-		//return playerArr
+		//return playerArr;
  }
 
  checkStatus(){
@@ -83,18 +95,18 @@ class AllPlayerStatus extends Component {
 		//console.log("The key in CHECK STATUS IS" + key);
 		//console.log("the value in CHECK STATUS IS " + value);
 		//console.log(value);
-		this.getAllPlayers();
+			this.getAllPlayers();
 	});
  }
 
 copyArray(arr, value){
 	console.log("IN COPY ARR")
 	var copyArr = []
-	for(var i = 0; i< arr.length; i++){
+	for(var i = 0; i<arr.length; i++){
 		var obj = arr[i]
 		copyArr.push(obj)
 	}
-	//copyArr[2]['status'] = 0;
+	copyArr[2]['status'] = 0;
 	this.setState({
 		dataSource: this.state.dataSource.cloneWithRows([{name: 'player1', status: 0}])
 	});
