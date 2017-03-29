@@ -126,9 +126,11 @@ export class EnterGameCode extends Component {
 
 	addPlayerToDatabase(code, totalNum) {
 		console.log("IN ADD PLAYER")
+
 		gameRef.child(code).once('value', snapshot => {
 			var self = this;
-
+			var playersEntry = code.concat("-players/");
+			var playerPath = 'Players/'.concat(playersEntry);
 			if(snapshot.val() !== null){
 				console.log("Game exists");
 				total = totalNum - 1;
