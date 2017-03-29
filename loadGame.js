@@ -23,7 +23,7 @@ export class GenerateGameCode extends Component{
 		super(props);
 		this.state={
 			gameId: '',
-			myId: ''
+			myId: '',
 		}
 	}
 
@@ -68,6 +68,8 @@ export class GenerateGameCode extends Component{
 		firebase.database().ref(PlayerPath + 0).set({
 			'ismoderator': 1,
 			'status': -1,
+      'charId': -1,
+      'charName': 'Moderator'
 		})
 	}
 
@@ -109,7 +111,19 @@ export class EnterGameCode extends Component {
 	constructor(props){
 		super(props);
 		this.state={
-			gameId: ''
+			gameId: '',
+      characters4: [{name: "Warlord", assigned: false},
+                    {name: "Citizen", assigned: false},
+                    {name: "Citizen", assigned: false}],
+      characters5: [{name: "Warlord", assigned: false},
+                    {name: "Warlord", assigned: false},
+                    {name: "Citizen", assigned: false},
+                    {name: "Citizen", assigned: false}],
+      characters6: [{name: "Warlord", assigned: false},
+                    {name: "Warlord", assigned: false},
+                    {name: "Citizen", assigned: false},
+                    {name: "Citizen", assigned: false},
+                    {name: "Citizen", assigned: false}]
 		}
 	}
 
@@ -124,7 +138,46 @@ export class EnterGameCode extends Component {
 
 	}
 
+  assign(numOfPlayers, array, index, code, playerPath, total, playersEntry){
+    var self = this;
+    console.log("initial index is "+index);
+    while (array[index].assigned){
+      console.log("array[index] is "+array[index]+'and index is '+index);
+      if(index === numOfPlayers-2){
+        index = 0;
+      }
+      else {
+        index++;
+      }
+      console.log('index is now '+index);
+    }
+    firebase.database().ref(playerPath + total).set({
+      'name': 'player',
+      // CHANGE THIS TO FB ID
+      'ismoderator': 0,
+      'facebookID': total,
+      'ismoderator': 0,
+      'status': 1,
+      'numvotes': 0,
+      'charId': index,
+      'charName': array[index].name
+    }, function(error){
+        // Callback comes here
+        if(error){
+          console.log(error);
+        }
+        else{
+          self.incrementPlayers(playerPath, playersEntry, code);
+        }
+      }
+    );
+
+  }
+
 	addPlayerToDatabase(code, totalNum) {
+    var self = this;
+    var numOfPlayers;
+    var array;
 		console.log("IN ADD PLAYER")
 
 		gameRef.child(code).once('value', snapshot => {
@@ -134,27 +187,55 @@ export class EnterGameCode extends Component {
 			if(snapshot.val() !== null){
 				console.log("Game exists");
 				total = totalNum - 1;
+        numOfPlayers = snapshot.val().numPlayers;
+        var index = Math.floor(Math.random() * (numOfPlayers-2 - 0)) + 0; //TODO: must change if moderator situation changes, can't be -2 anymore
+        if (numOfPlayers === 4){
+          array = this.state.characters4;
+        }
+        else if (numOfPlayers === 5){
+          array = this.state.characters5;
+        }
+        else if (numOfPlayers === 6){
+          array = this.state.characters6;
+        }
 				this.setState({myId: total});
-				firebase.database().ref(playerPath + total).set({
-					'name': 'player',
-					// CHANGE THIS TO FB ID
-					'ismoderator': 0,
-					'facebookID': total,
+        playersRef.child(playersEntry).once('value').then(function(snapshot){
+          var length = Object.keys(snapshot).length;
+          var count = 1;
+          snapshot.forEach(function(childSnapshot) {
+            var charId = childSnapshot.val().charId;
+            console.log(charId);
+            console.log(array[charId]);
+            if(charId !== -1 && charId !== undefined){
+              array[charId].assigned = true;
+              console.log(array[charId]);
+            }
+            if(count === length){
+              self.assign(numOfPlayers, array, index, code, playerPath, total, playersEntry);
+            }
+            count++;
+          });
+          /*console.log("initial index is "+index);
+          while (array[index].assigned){
+            console.log("array[index] is "+array[index]+'and index is '+index);
+            if(index === numOfPlayers-2){
+              index = 0;
+            }
+            else {
+              index++;
+            }
+            console.log('index is now '+index);
+          }*/
+        });
+
+				/*firebase.database().ref(playerPath + total).set({
 					'ismoderator': 0,
 					'status': 1,
-					'numvotes': 0
-				}, function(error){
- 						// Callback comes here
- 						if(error){
-    					console.log(error);
- 						}
- 						else{
-    					self.incrementPlayers(playerPath, playersEntry);
-  					}
-					}
-				);
-					console.log("the myId state is : " + this.state.myId);
-					this.pushConnectingScene(code);
+          'charId': index,
+          'charName': array[index].name
+				});
+				console.log("the myId state is : " + this.state.myId);
+				this.pushConnectingScene(code);*/
 			}
 
 			else {
@@ -185,15 +266,19 @@ export class EnterGameCode extends Component {
 
 	}
 
-	incrementPlayers(playerPath, playersEntry){
+	incrementPlayers(playerPath, playersEntry, code){
 		playersRef.child(playersEntry).once('value', snapshot => {
 			console.log("BEFORE SNAPSHOT NOT = NULL");
 			    var totalCurrentPlayers;
 					if (snapshot.val() != null) {
 						console.log("Snapshot valu found");
 						totalCurrentPlayers = snapshot.val().totalNumPlayers;
+						console.log("The totalCurrentPlayers before adding is :" + totalCurrentPlayers);
 						totalCurrentPlayers = totalCurrentPlayers + 1;
+						console.log("Total current players is  after adding  " + totalCurrentPlayers);
 						database.ref(playerPath).update({'totalNumPlayers': totalCurrentPlayers});
+						console.log("the myId state is : " + this.state.myId);
+			      this.pushConnectingScene(code);
 					}
 				});
 			}
