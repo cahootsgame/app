@@ -136,6 +136,7 @@ export class EnterGameCode extends Component {
 				firebase.database().ref(playerPath + total).set({
 					'name': 'player',
 					// CHANGE THIS TO FB ID
+					'ismoderator': 0,
 					'facebookID': total,
 					'ismoderator': 0,
 					'status': 1,
