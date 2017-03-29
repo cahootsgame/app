@@ -32,6 +32,7 @@ class PlayerCards extends Component {
 				console.log("IN GET VOTE PATE");
         console.log(key);
         console.log(value);
+				console.log("The isCahoot is " + isCahoot)
         if((key === 'cahootVote') && (value === 1) && (isCahoot === 1)){
           // If its time for the cahoots to vote
             this.props.navigator.push({
@@ -73,6 +74,7 @@ class PlayerCards extends Component {
     var player = this.props.gameId+'-players/' + this.props.playerId;
     var role = player.charName;
     var isCahoot;
+		console.log("The role is " + role);
     if (role === "Warlord") {
       isCahoot = 1;
     }
@@ -83,7 +85,7 @@ class PlayerCards extends Component {
     this.getVotePage(isCahoot);
     // Check if i've died
     this.checkStatus();
-    
+
   }
 
   render() {

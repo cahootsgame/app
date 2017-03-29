@@ -215,27 +215,7 @@ export class EnterGameCode extends Component {
             }
             count++;
           });
-          /*console.log("initial index is "+index);
-          while (array[index].assigned){
-            console.log("array[index] is "+array[index]+'and index is '+index);
-            if(index === numOfPlayers-2){
-              index = 0;
-            }
-            else {
-              index++;
-            }
-            console.log('index is now '+index);
-          }*/
         });
-
-				/*firebase.database().ref(playerPath + total).set({
-					'ismoderator': 0,
-					'status': 1,
-          'charId': index,
-          'charName': array[index].name
-				});
-				console.log("the myId state is : " + this.state.myId);
-				this.pushConnectingScene(code);*/
 			}
 
 			else {
