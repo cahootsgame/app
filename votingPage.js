@@ -4,7 +4,9 @@ import * as firebase from 'firebase';
 import fb from './firebaseConfig.js'
 
 
-
+var database = firebase.database();
+var gameRef = database.ref().child('Game');
+var playersRef = database.ref().child('Players');
 
 import {
   AppRegistry,
@@ -26,7 +28,7 @@ export default class VotingPage extends Component {
     super(props);
     var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-      data: ds.cloneWithRows([
+      dataSource: ds.cloneWithRows([
         'Duaa', 'Sheethala'
       ]),
       numPeopleVoting: 0,
@@ -35,9 +37,61 @@ export default class VotingPage extends Component {
     }
   }
 
+getAllPlayers(){
+   //This function gets all players in the game.
+   var code = this.props.gameId+'-players';
+   playersRef.child(code).once("value")
+    .then(function(snapshot) {
+      console.log("BEFORE HE FOR LOOOOOOÔP!!!!!!!!!!!!!!!!")
+      console.log("The snapshot value is");
+      console.log(snapshot.val());
+      //var playerArr = [];
+      var playerArr = [];
+      var key = snapshot.key
+      console.log("The key is" + key);
+      console.log("The ")
+      //snapshot.val() is an object. We know the number of keys, thus iterate through it
+      var totalPlayers = snapshot.val().totalNumPlayers;
+      for(var i = 0; i<totalPlayers; i++) {
+
+        //player is an object which represents player i.
+        console.log("The snapshot value is");
+        console.log(snapshot.val());
+        var player = snapshot.val()[i];
+
+        console.log("the i is" + i);
+        console.log("THE PLAYER IS");
+        console.log(player);
+        if(typeof(player) === 'undefined'){
+          console.log("PLAYER UNDEFINED HELP!!!!!!!!!!!!!")
+          continue;
+        }
+        //@TODO : To remove this hardcoded thing
+        //player['name'] = 'player' + i;
+        if (player.ismoderator !== 1 && this.state.cahootVote === 1 && player.charName === "Citizen") {
+
+            playerArr.push(player);
+            console.log("The player is arr");
+            console.log(playerArr);
+        }
+        if (player.ismoderator !== 1 && this.state.everyoneVote === 1) {
+            playerArr.push(player);
+            console.log("The player is arr");
+            console.log(playerArr);
+        }
+      }
+      console.log("DONE THE FOR LOOP");
+      console.log(playerArr);
+      this.setState({
+      dataSource: this.state.dataSource.cloneWithRows(playerArr)
+      });
+    }.bind(this));
+    //return playerArr;
+ }
+
   componentDidMount(){
     this.setVoteInfo();
-    this.numVoting(this.state.gameId);
+    this.numVoting();
   }
 
   setVoteInfo() {
@@ -49,15 +103,18 @@ export default class VotingPage extends Component {
         // ACTIVATE VOTE FOR CAHOOTS
         var cahoot = snapshot.val().cahootVote;
         var everyone = snapshot.val().everyoneVote;
-        this.setState({'cahootVote': cahoot});
-        this.setState({'everyoneVote': everyone});
+        this.setState({'cahootVote': cahoot, 'everyoneVote': everyone}, () => {
+            this.getAllPlayers(); 
+        });
       }
-    })
+    });
 
   }
 
-  numVoting(code) {
-    playerRef.child(code).once('value', snapshot => {
+  numVoting() {
+    var code = this.props.gameId
+    var path = code.concat("-players");
+    playersRef.child(code).once('value', snapshot => {
       if(snapshot.val() !== null){
         console.log("Game exists");
         var numberPeopleVoting = snapshot.val().totalNumVoters;
@@ -76,7 +133,7 @@ export default class VotingPage extends Component {
 
     playersRef.child(playersEntry).once('value', snapshot => {
       console.log("BEFORE SNAPSHOT NOT = NULL");
-        if(snapshot.val() !== NULL){
+        if(snapshot.val() !== null){
           // The number of players that are still left in the game
            totalCurrentPlayers = snapshot.val().totalNumPlayers;
             var numVotes;
@@ -85,7 +142,9 @@ export default class VotingPage extends Component {
               var player = snapshot.val()[i];
               if(player.facebookID === playerID){
                 //Someone wanted to kill this player, add 1 to their vote.
-                numVotes = player.numVotes + 1;
+                
+                numVotes = player.numvotes + 1;
+                console.log("NUMVOTES IS NOW: " + numVotes)
                 var currentPlayerPath = playerPath + '/' + i;
                 database.ref(currentPlayerPath).update({'numvotes': numVotes});
               }
@@ -95,8 +154,9 @@ export default class VotingPage extends Component {
             totalVotes = snapshot.val().total_vote;
             totalVotes = totalVotes + 1;
             database.ref(playerPath).update({'total_vote': totalVotes});
-
+            console.log ("BEFORE TOTALVOTES -- NUM PEOPLE VOTING")
             if (totalVotes === this.state.numPeopleVoting) {
+                  console.log ("IN TOTAL VOTES == NUM PEOPLE VOTING")
                   this.calculateResult();
             }
 
@@ -108,7 +168,7 @@ export default class VotingPage extends Component {
     // This funtion will change the dead/alive thingy
     playersRef.child(playersEntry).once('value', snapshot => {
 
-      if(snapshot.val() !== NULL) {
+      if(snapshot.val() !== null) {
         totalCurrentPlayers = snapshot.val().totalNumPlayers;
         var numVotes;
         var currHighest = 0;
@@ -156,7 +216,7 @@ export default class VotingPage extends Component {
         id: 'VotingResults',
         nameWhoGotKilled: name
       })
-      resetVote();
+      this.resetVote();
   }
 
 
@@ -168,11 +228,11 @@ export default class VotingPage extends Component {
 
       var totalCurrentPlayers;
       if (this.state.everyoneVote === 1) {
-        addVote(code,whoToKill);
+        this.addVote(code,whoToKill);
       } else if (this.state.cahootVote === 1) {
         playersRef.child(playersEntry).once('value', snapshot => {
         console.log("BEFORE SNAPSHOT NOT = NULL");
-          if(snapshot.val() !== NULL) {
+          if(snapshot.val() !== null) {
              totalCurrentPlayers = snapshot.val().totalNumPlayers;
               var numVotes;
               for(var i = 0; i<totalCurrentPlayers; i++){
@@ -188,17 +248,15 @@ export default class VotingPage extends Component {
     }
 
   renderRow(item) {
-    var rowHash = Math.abs(hashCode(rowData));
-    var imgSource = {
-      uri: THUMB_URLS[rowHash % THUMB_URLS.length],
-    };
+    console.log("IN RENDER ROW")
+    console.log(item);
     var whoToKill = item.facebookID
       return (
         <TouchableHighlight onPress={() => this.whichVote(this.props.gameId, whoToKill)}underlayColor='rgba(0,0,0,0)'>
            <View style={styles.row}>
-           <Image style ={styles.thumb} source={imgSource} />
+           <Image style ={styles.thumb} />
              <Text style={styles.text}>
-               {rowData}
+               item.name
              </Text>
            </View>
          </TouchableHighlight>
@@ -211,7 +269,7 @@ export default class VotingPage extends Component {
   render() {
     return(
         <ListView contentContainerStyle = {styles.list}
-          dataSource = {this.state.data}
+          dataSource = {this.state.dataSource}
           renderRow={(item) => this.renderRow(item)}
         />
     )

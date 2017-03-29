@@ -67,6 +67,7 @@ export class GenerateGameCode extends Component{
 
 		firebase.database().ref(PlayerPath + 0).set({
 			'ismoderator': 1,
+      'facebookID': 0,
 			'status': -1,
       'charId': -1,
       'charName': 'Moderator'
