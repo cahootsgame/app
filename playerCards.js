@@ -95,10 +95,15 @@ class PlayerCards extends Component {
           );*/
         case 'Warlord':
           return (
+            <Swiper>
             <View>
               <Text style={styles.title}>You are a Warlord</Text>
               <Text style={styles.body}>You are one of the bad guys, be discrete so no one can find you.</Text>
             </View>
+            <View>
+              <AllPlayerStatus gameId={this.props.gameId}/>
+            </View>
+            </Swiper>
           );
       }
     }
