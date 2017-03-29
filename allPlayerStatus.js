@@ -51,11 +51,11 @@ class AllPlayerStatus extends Component {
 			//snapshot.val() is an object. We know the number of keys, thus iterate through it
 			var totalPlayers = snapshot.val().totalNumPlayers;
 			for(var i = 0; i<totalPlayers; i++){
-				console.log("total num players " +totalPlayers);
+				console.log("total num players " + totalPlayers);
 
 				//player is an object which represents player i.
 				var player = snapshot.val()[i];
-				
+
 				if (player.ismoderator !== 1) {
 					playerArr.push(player);
 					console.log("The player is arr");
