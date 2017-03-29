@@ -138,7 +138,8 @@ export class EnterGameCode extends Component {
 
 	}
 
-  assign(numOfPlayers, array, index, code, playerPath, total){
+  assign(numOfPlayers, array, index, code, playerPath, total, playersEntry){
+    var self = this;
     console.log("initial index is "+index);
     while (array[index].assigned){
       console.log("array[index] is "+array[index]+'and index is '+index);
@@ -157,7 +158,9 @@ export class EnterGameCode extends Component {
       'facebookID': total,
       'ismoderator': 0,
       'status': 1,
-      'numvotes': 0
+      'numvotes': 0,
+      'charId': index,
+      'charName': array[index].name
     }, function(error){
         // Callback comes here
         if(error){
@@ -209,7 +212,7 @@ export class EnterGameCode extends Component {
               console.log(array[charId]);
             }
             if(count === length){
-              self.assign(numOfPlayers, array, index, code, playerPath, total);
+              self.assign(numOfPlayers, array, index, code, playerPath, total, playersEntry);
             }
             count++;
           });
