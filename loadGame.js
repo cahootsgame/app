@@ -45,10 +45,11 @@ export class GenerateGameCode extends Component{
 		else if (this.props.numOfPlayers === 6) {
 			numCahoots = 2;
 		}
+		var numplayer = this.props.numOfPlayers
 		console.log("num of players: " + this.props.numOfPlayers)
 		firebase.database().ref('Game/' + this.state.gameId).set({
 			'adminId': 0,
-			'numPlayers': this.props.numOfPlayers,
+			'numPlayers': numplayer,
 			'numCahoots': numCahoots,
 			'theme': 0,
 			'cahootVote': 0,
@@ -60,7 +61,7 @@ export class GenerateGameCode extends Component{
 			// This value we use to check against when people are added to the database
 			'totalNumPlayers': 1,
 			// This value is the one we minus from when someone dies, helps us render the "everyoneVote page"
-			'totalNumVoters': this.props.numOfPlayers
+			'totalNumVoters': numplayer - 1
 
 		})
 
@@ -108,8 +109,7 @@ export class EnterGameCode extends Component {
 	constructor(props){
 		super(props);
 		this.state={
-			gameId: '',
-			numOfPlayers: 0
+			gameId: ''
 		}
 	}
 

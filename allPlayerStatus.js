@@ -54,7 +54,7 @@ class AllPlayerStatus extends Component {
 				//player is an object which represents player i.
 				var player = snapshot.val()[i];
 				//@TODO : To remove this hardcoded thing
-				player['name'] = 'player' + i;
+				//player['name'] = 'player' + i;
 				playerArr.push(player);
 				console.log("The player is arr");
 				console.log(playerArr);
