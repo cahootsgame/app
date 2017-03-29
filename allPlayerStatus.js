@@ -65,7 +65,7 @@ class AllPlayerStatus extends Component {
 				dataSource: this.state.dataSource.cloneWithRows(playerArr)
 			});
 		}.bind(this));
-		//return playerArr;
+		//return playerArr
  }
 
  checkStatus(){
