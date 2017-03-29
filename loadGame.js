@@ -34,22 +34,27 @@ export class GenerateGameCode extends Component{
 		var playersEntry = this.state.gameId.concat("-players");
 		var playersEntryWithSlash = this.state.gameId.concat("-players/");
 		var PlayerPath = 'Players/'.concat(playersEntryWithSlash);
-
+    var that = this;
 		firebase.database().ref('Game/' + this.state.gameId).set({
 			'adminId': 0,
 			'numPlayers': 4,
 			'theme': 0,
 			'cahootVote': 0,
 			//'players': [0]
-		})
+		});
 		firebase.database().ref('Players/' + playersEntry).set({
-			'gameId': this.state.gameId,
+			'gameId': that.state.gameId,
 			'totalNumPlayers': 1
 		})
+
+		console.log("The name is" + this.props.name);
 
 		firebase.database().ref(PlayerPath + 0).set({
 			'ismoderator': 1,
 			'status': -1,
+			'name': that.props.name,
+			'facebookID': that.props.fbID,
+			'fbProfilePic': that.props.fbProfilePic
 		})
 	}
 
@@ -115,6 +120,9 @@ export class EnterGameCode extends Component {
 				total = totalNum - 1;
 				this.setState({myId: total});
 				firebase.database().ref(playerPath + total).set({
+					'name': this.props.name,
+					'facebookID': this.props.fbID,
+					'fbProfilePic': this.props.fbProfilePic,
 					'ismoderator': 0,
 					'status': 1,
 				});

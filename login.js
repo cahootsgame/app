@@ -5,7 +5,7 @@ import ConnectingPlayers from './ConnectingPlayers.js';
 import TouchableButton from './touchableButton.js';
 import fb from './firebaseConfig.js'
 import ModeratorActions from './moderateScene.js'
-import {LoginButton, AccessToken} from 'react-native-fbsdk'
+import {LoginButton, AccessToken, GraphRequest, GraphRequestManager} from 'react-native-fbsdk'
 import {
   AppRegistry,
   Alert,
@@ -23,6 +23,67 @@ export default class Login extends Component {
 			gameId: ''
 		}
 	}
+
+	requestFBGraphAPI(data){
+		console.log("IN REQUEST THINGY");
+		var reqParams = 'email,name,first_name,middle_name,last_name';
+		var accessToken = data.accessToken;
+		const infoRequest = new GraphRequest(
+			'/me',
+			{
+				parameters: {
+					fields: {
+						string: reqParams
+					},
+					access_token: {
+						string: accessToken
+					}
+				}
+			},
+			this.responseInfoCallback.bind(this)
+		);
+		new GraphRequestManager().addRequest(infoRequest).start();
+	}
+
+	onNextPressed(name, fbID){
+		//Get the user id, profile picture.
+		var profilePicture = "https://graph.facebook.com/" + fbID + "/picture"
+		console.log('calling request FB Graph API');
+    this.props.navigator.push({
+			id: 'LandingPage',
+			fbID: fbID,
+			name: name,
+			fbProfilePic: profilePicture
+		});
+  }
+
+	responseInfoCallback(error: ?Object, result: ?Object){
+		if(error){
+			alert('Error fetching data: ' + error.toString());
+	      console.log(Object.keys(error));// print all enumerable
+	      console.log(error.errorMessage); // print error message
+		}
+		else{
+			alert('Success fetching data: ' + result.toString());
+	      console.log(Object.keys(result));
+	      meow_json = JSON.stringify(result); // result => JSON
+	      console.log(meow_json); // print JSON
+				var name = result['first_name'];
+				debugger;
+				var fbID = result['id'];
+				//Once we have these values Render their screen.
+				//this.onNextPressed(name, fbID).bind(this);
+				var profilePicture = "https://graph.facebook.com/" + fbID + "/picture"
+				console.log('calling request FB Graph API');
+		    this.props.navigator.push({
+					id: 'LandingPage',
+					fbID: fbID,
+					name: name,
+					fbProfilePic: profilePicture
+				});
+		}
+	}
+
 
 
   render() {
@@ -47,7 +108,11 @@ export default class Login extends Component {
               } else {
                 AccessToken.getCurrentAccessToken().then(
                   (data) => {
+										console.log("FB LOGIN THE DATA IS")
+										console.log(data);
                     alert(data.accessToken.toString())
+										this.requestFBGraphAPI(data);
+;
                   }
                 )
               }
@@ -58,13 +123,9 @@ export default class Login extends Component {
     );
 
   }
-
-  onNextPressed(){
-    this.props.navigator.push({
-			id: 'LandingPage',
-		})
-  }
 }
+
+
 
 const styles = StyleSheet.create({
   back: {

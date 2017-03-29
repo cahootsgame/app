@@ -40,7 +40,10 @@ export default class LandingPage extends Component {
   onPressStartNewGame(){
     //console.log("START NEW GAME PRESSED")
     this.props.navigator.push({
-      id: 'NumberOfPlayers'
+      id: 'NumberOfPlayers',
+			fbID: this.props.fbID,
+			name: this.props.name,
+			fbProfilePic: this.props.fbProfilePic
     })
 
   }
@@ -48,7 +51,10 @@ export default class LandingPage extends Component {
   onPressConnectGame() {
     console.log("CONNECT TO GAME PRESSED");
 		this.props.navigator.push({
-			id: 'EnterGameCode'
+			id: 'EnterGameCode',
+			fbID: this.props.fbID,
+			name: this.props.name,
+			fbProfilePic: this.props.fbProfilePic
 		})
         // This component will be pushed onto the stack
   }

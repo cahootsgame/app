@@ -34,7 +34,10 @@ class NumberOfPlayers extends Component {
   onPressNext(){
     console.log("Next pressed in num players")
     this.props.navigator.push({
-      id: 'ChooseTheme'
+      id: 'ChooseTheme',
+			fbID: this.props.fbID,
+			name: this.props.name,
+			fbProfilePic: this.props.fbProfilePic
     })
   }
 
