@@ -167,12 +167,11 @@ export class EnterGameCode extends Component {
           console.log(error);
         }
         else{
-          self.incrementPlayers(playerPath, playersEntry);
+          self.incrementPlayers(playerPath, playersEntry, code);
         }
       }
     );
-      console.log("the myId state is : " + this.state.myId);
-      this.pushConnectingScene(code);
+
   }
 
 	addPlayerToDatabase(code, totalNum) {
@@ -267,15 +266,19 @@ export class EnterGameCode extends Component {
 
 	}
 
-	incrementPlayers(playerPath, playersEntry){
+	incrementPlayers(playerPath, playersEntry, code){
 		playersRef.child(playersEntry).once('value', snapshot => {
 			console.log("BEFORE SNAPSHOT NOT = NULL");
 			    var totalCurrentPlayers;
 					if (snapshot.val() != null) {
 						console.log("Snapshot valu found");
 						totalCurrentPlayers = snapshot.val().totalNumPlayers;
+						console.log("The totalCurrentPlayers before adding is :" + totalCurrentPlayers);
 						totalCurrentPlayers = totalCurrentPlayers + 1;
+						console.log("Total current players is  after adding  " + totalCurrentPlayers);
 						database.ref(playerPath).update({'totalNumPlayers': totalCurrentPlayers});
+						console.log("the myId state is : " + this.state.myId);
+			      this.pushConnectingScene(code);
 					}
 				});
 			}

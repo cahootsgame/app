@@ -38,6 +38,7 @@ export default class ConnectingPlayers extends Component {
   }
 
   componentDidMount() {
+		console.log("IN component Did mount");
     var code = this.props.gameId;
     var playersPath = code.concat("-players");
 
@@ -49,7 +50,7 @@ export default class ConnectingPlayers extends Component {
             console.log("the total number of playres currently is " + totalNum);
             console.log ("this total numer fo players in the game is: " + this.state.numOfPlayers)
             if (totalNum !== this.state.numOfPlayers) {
-              this.waitForPlayers();
+              this.waitForPlayers(this.state.numOfPlayers);
             }
             else{
               this.pushCharacterCard();
@@ -80,7 +81,7 @@ export default class ConnectingPlayers extends Component {
 
 
 
-  waitForPlayers() {
+  waitForPlayers(numOfPlayers) {
     var totalCurrentPlayers;
     var totalFinalPlayers;
     var code = this.props.gameId;
@@ -88,11 +89,12 @@ export default class ConnectingPlayers extends Component {
     var playersPath = code.concat("-players");
     var check = true;
     playersRef.child(playersPath).on('child_changed', snapshot =>{
+			console.log("IN WAIINGFOR PLAYERS CHILD CHANGEID!!!!!!!!")
       var value = snapshot.val()
       var key = snapshot.key;
       console.log(key);
       console.log(value);
-      if((key === 'totalNumPlayers') && (value === 4)){
+      if((key === 'totalNumPlayers') && (value === numOfPlayers)){
         this.pushCharacterCard();
       }
       console.log("Added value");
@@ -100,6 +102,7 @@ export default class ConnectingPlayers extends Component {
   }
 
   pushCharacterCard() {
+		console.log("PUSING CHARACTER CARD");
     var code = this.props.gameId;
     var playersPath = code.concat("-players/"+this.props.playerId);
     var name;
