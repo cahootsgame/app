@@ -44,20 +44,36 @@ class AllPlayerStatus extends Component {
 	 var code = this.props.gameId+'-players';
 	 playersRef.child(code).once("value")
 	 	.then(function(snapshot) {
+			console.log("BEFORE HE FOR LOOOOOOÔP!!!!!!!!!!!!!!!!")
+			console.log("The snapshot value is");
+			console.log(snapshot.val());
 			//var playerArr = [];
 			var playerArr = [];
 			var key = snapshot.key
 			console.log("The key is" + key);
+			console.log("The ")
 			//snapshot.val() is an object. We know the number of keys, thus iterate through it
 			var totalPlayers = snapshot.val().totalNumPlayers;
 			for(var i = 0; i<totalPlayers; i++){
 				//player is an object which represents player i.
+				console.log("The snapshot value is");
+				console.log(snapshot.val());
 				var player = snapshot.val()[i];
+				console.log("the i is" + i);
+				console.log("THE PLAYER IS");
+				console.log(player);
+				if(typeof(player) === 'undefined'){
+					console.log("PLAYER UNDEFINED HELP!!!!!!!!!!!!!")
+					continue;
+				}
 				//@TODO : To remove this hardcoded thing
-				player['name'] = 'player' + i;
-				playerArr.push(player);
-				console.log("The player is arr");
-				console.log(playerArr);
+				//player['name'] = 'player' + i;
+				if(player.ismoderator !== 1){
+					playerArr.push(player);
+					console.log("The player is arr");
+					console.log(playerArr);
+				}
+
 			}
 			console.log("DONE THE FOR LOOP");
 			console.log(playerArr);

@@ -33,8 +33,10 @@ class NumberOfPlayers extends Component {
 
   onPressNext(){
     console.log("Next pressed in num players")
+    console.log("NUM OF PLAYERS IN STATE" + this.state.numOfPlayers)
     this.props.navigator.push({
-      id: 'ChooseTheme'
+      id: 'ChooseTheme',
+      numOfPlayers: this.state.numOfPlayers
     })
   }
 

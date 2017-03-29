@@ -40,7 +40,8 @@ export default class LandingPage extends Component {
   onPressStartNewGame(){
     //console.log("START NEW GAME PRESSED")
     this.props.navigator.push({
-      id: 'NumberOfPlayers'
+      id: 'NumberOfPlayers',
+      numOfPlayers: this.props.numOfPlayers
     })
 
   }

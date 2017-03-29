@@ -33,24 +33,30 @@ export default class ConnectingPlayers extends Component {
     super(props);
     this.state = {
       animating: true,
+      numOfPlayers: 0
     };
   }
 
   componentDidMount() {
     var code = this.props.gameId;
     var playersPath = code.concat("-players");
-    this.setToggleTimeout();
-    playersRef.child(playersPath).once('value', snapshot => {
-      var totalNum = snapshot.val().totalNumPlayers;
-			console.log("the total number of playres is " + totalNum);
-      if(totalNum !== 4){
-        this.waitForPlayers();
-      }
-      else{
-          this.pushCharacterCard();
-      }
+
+    gameRef.child(code).once('value', snapshot => {
+      var totalGamePlayers = snapshot.val().numPlayers;
+      this.setState({numOfPlayers: totalGamePlayers}, function() {
+          playersRef.child(playersPath).once('value', snapshot => {
+            var totalNum = snapshot.val().totalNumPlayers;
+            console.log("the total number of playres currently is " + totalNum);
+            console.log ("this total numer fo players in the game is: " + this.state.numOfPlayers)
+            if (totalNum !== this.state.numOfPlayers) {
+              this.waitForPlayers();
+            }
+            else{
+              this.pushCharacterCard();
+            }
+        });
+      });
     });
-    //this.waitForPlayers();
   }
 
   componentWillUnmount() {
@@ -75,26 +81,23 @@ export default class ConnectingPlayers extends Component {
 
 
   waitForPlayers() {
-
-  var totalCurrentPlayers;
-  var totalFinalPlayers;
-  var code = this.props.gameId;
-  var playerId = this.props.playerId;
-  var playersPath = code.concat("-players");
-  var check = true;
-  playersRef.child(playersPath).on('child_changed', snapshot =>{
-    var value = snapshot.val()
-    var key = snapshot.key;
-    console.log(key);
-    console.log(value);
-    if((key === 'totalNumPlayers') && (value === 4)){
+    var totalCurrentPlayers;
+    var totalFinalPlayers;
+    var code = this.props.gameId;
+    var playerId = this.props.playerId;
+    var playersPath = code.concat("-players");
+    var check = true;
+    playersRef.child(playersPath).on('child_changed', snapshot =>{
+      var value = snapshot.val()
+      var key = snapshot.key;
+      console.log(key);
+      console.log(value);
+      if((key === 'totalNumPlayers') && (value === 4)){
         this.pushCharacterCard();
-    }
-    console.log("Added value");
-  });
-
-
-}
+      }
+      console.log("Added value");
+    });
+  }
 
   pushCharacterCard() {
     var code = this.props.gameId;

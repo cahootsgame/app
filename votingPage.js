@@ -26,34 +26,175 @@ export default class VotingPage extends Component {
     super(props);
     var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-      //data: ds.cloneWithRows(this._genRows({}))
       data: ds.cloneWithRows([
         'Duaa', 'Sheethala'
-      ])
+      ]),
+      numPeopleVoting: 0,
+      cahootVote: 0,
+      everyoneVote: 0
     }
   }
 
-  //_pressData({}: {[key: number]: boolean})
+  componentDidMount(){
+    this.setVoteInfo();
+    this.numVoting(this.state.gameId);
+  }
+
+  setVoteInfo() {
+    var code = this.props.gameId
+    var gamePath = 'Game/'.concat(code);
+    gameRef.child(code).once('value', snapshot => {
+      if(snapshot.val() !== null){
+        console.log("Game exists");
+        // ACTIVATE VOTE FOR CAHOOTS
+        var cahoot = snapshot.val().cahootVote;
+        var everyone = snapshot.val().everyoneVote;
+        this.setState({'cahootVote': cahoot});
+        this.setState({'everyoneVote': everyone});
+      }
+    })
+
+  }
+
+  numVoting(code) {
+    playerRef.child(code).once('value', snapshot => {
+      if(snapshot.val() !== null){
+        console.log("Game exists");
+        var numberPeopleVoting = snapshot.val().totalNumVoters;
+
+        this.setState({numPeopleVoting: numberPeopleVoting});
+      }
+    })
+  }
+
+  // PlayerID is the facebook ID of that person that was clicked on to vote off
+  addVote(code, playerID) {
+      console.log("CALLED WHEN VOTE IS MADE");
+      var playersEntry = code.concat("-players");
+      var playerPath = 'Players/'.concat(playersEntry);
+      var totalCurrentPlayers;
+
+    playersRef.child(playersEntry).once('value', snapshot => {
+      console.log("BEFORE SNAPSHOT NOT = NULL");
+        if(snapshot.val() !== NULL){
+          // The number of players that are still left in the game
+           totalCurrentPlayers = snapshot.val().totalNumPlayers;
+            var numVotes;
+            // TODO: here should we check if the player is dead or not?? Shouldnt ever reach here if the player is dead tbh, cus the button wouldnt have rendered
+            for(var i = 0; i < totalCurrentPlayers; i++){
+              var player = snapshot.val()[i];
+              if(player.facebookID === playerID){
+                //Someone wanted to kill this player, add 1 to their vote.
+                numVotes = player.numVotes + 1;
+                var currentPlayerPath = playerPath + '/' + i;
+                database.ref(currentPlayerPath).update({'numvotes': numVotes});
+              }
+            }
+
+            // Check against this value to see if everyones votes are in 
+            totalVotes = snapshot.val().total_vote;
+            totalVotes = totalVotes + 1;
+            database.ref(playerPath).update({'total_vote': totalVotes});
+
+            if (totalVotes === this.state.numPeopleVoting) {
+                  this.calculateResult();
+            }
+
+          }
+      })
+  }
+
+  calculateResult() {
+    // This funtion will change the dead/alive thingy
+    playersRef.child(playersEntry).once('value', snapshot => {
+
+      if(snapshot.val() !== NULL) {
+        totalCurrentPlayers = snapshot.val().totalNumPlayers;
+        var numVotes;
+        var currHighest = 0;
+        var curr = 0;
+        var playerToKill;
+        var k;
+        for(i = 0; i < totalCurrentPlayers; i++){
+          var player = snapshot.val()[i];
+          curr = player.numVotes;
+          if (curr > currHighest) {
+            currHighest = curr;
+            playerToKill = player;
+            k = i;
+          }
+          // RESET their count
+          var currentPlayerPath = playerPath + '/' + i;
+            database.ref(currentPlayerPath).update({'numvotes': 0});
+          }
+          // actually change their status to 0, their dead
+          this.completeVote(k,playerToKill);
+      }
+    })
+}
+
+  resetVote() {
+    var code = this.props.gameId
+    var gamePath = 'Game/'.concat(code);
+    gameRef.child(code).once('value', snapshot => {
+      if(snapshot.val() !== null){
+        console.log("Game exists");
+        // ACTIVATE VOTE FOR CAHOOTS
+        database.ref(gamePath).update({'cahootVote': 0});
+        database.ref(gamePath).update({'everyoneVote': 0});
+      }
+    })
+  }
 
 
-    completeVote(){
-      console.log('yo');
-			console.log(this.props.gameId);
-			firebase.database().ref('Players/' + this.props.gameId  + '-players/2').update({
+  completeVote(k,playerToKill) {
+      var name = playerToKill.name;
+			firebase.database().ref('Players/' + this.props.gameId  + '-players/' + k).update({
 				'status': 0
 			});
       this.props.navigator.push({
-        id: 'VotingResults'
+        id: 'VotingResults',
+        nameWhoGotKilled: name
       })
+      resetVote();
+  }
+
+
+    whichVote(code, whoToKill) {
+
+      //Check from the Database if it was cahoot vote or everyone vote
+      //If everyoneVote, call addToVote, else call complete voe with two params.
+      var k;
+
+      var totalCurrentPlayers;
+      if (this.state.everyoneVote === 1) {
+        addVote(code,whoToKill);
+      } else if (this.state.cahootVote === 1) {
+        playersRef.child(playersEntry).once('value', snapshot => {
+        console.log("BEFORE SNAPSHOT NOT = NULL");
+          if(snapshot.val() !== NULL) {
+             totalCurrentPlayers = snapshot.val().totalNumPlayers;
+              var numVotes;
+              for(var i = 0; i<totalCurrentPlayers; i++){
+                var player = snapshot.val()[i];
+                if(player.facebookID === playerID){
+                  //Someone wanted to kill this player, add 1 to their vote.
+                  this.completeVote(i,player);
+                }
+              }
+            }
+        })
+      }
     }
 
-    _renderRow(rowData: string, sectionID: number, rowID: number) {
-      //var rowHash = Math.abs(hashCode(rowData));
-      var imgSource = {
-        uri: THUMB_URLS[rowHash % THUMB_URLS.length],
-      };
+  renderRow(item) {
+    var rowHash = Math.abs(hashCode(rowData));
+    var imgSource = {
+      uri: THUMB_URLS[rowHash % THUMB_URLS.length],
+    };
+    var whoToKill = item.facebookID
       return (
-        <TouchableHighlight onPress={() => this.completeVote()}underlayColor='rgba(0,0,0,0)'>
+        <TouchableHighlight onPress={() => this.whichVote(this.props.gameId, whoToKill)}underlayColor='rgba(0,0,0,0)'>
            <View style={styles.row}>
            <Image style ={styles.thumb} source={imgSource} />
              <Text style={styles.text}>
@@ -63,7 +204,7 @@ export default class VotingPage extends Component {
          </TouchableHighlight>
 
       );
-    }
+  }
 
 
 
@@ -71,7 +212,7 @@ export default class VotingPage extends Component {
     return(
         <ListView contentContainerStyle = {styles.list}
           dataSource = {this.state.data}
-          renderRow={(item) => this._renderRow(item)}
+          renderRow={(item) => this.renderRow(item)}
         />
     )
   }

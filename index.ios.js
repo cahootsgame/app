@@ -42,13 +42,13 @@ class Cahoots extends Component {
         return (<Login navigator={navigator} title="login"/>);
 
       case 'LandingPage':
-        return (<LandingPage navigator={navigator} title="Start new game or connect"/>);
+        return (<LandingPage navigator={navigator} title="Start new game or connect" numOfPlayers={route.numOfPlayers}/>);
 
       case 'EnterGameCode':
-        return (<EnterGameCode navigator={navigator} title="Enter new game code"/>);
+        return (<EnterGameCode navigator={navigator} title="Enter new game code" numOfPlayers={route.numOfPlayers}/ >);
 
 			case 'GenerateGameCode':
-				return(<GenerateGameCode navigator={navigator} title="Enter new game code" />);
+				return(<GenerateGameCode navigator={navigator} title="Enter new game code" numOfPlayers={route.numOfPlayers}/>);
 
 			case 'ConnectingPlayers':
 				return(<ConnectingPlayers navigator={navigator} title="Wait for players to connect" gameId={route.gameId} playerId={route.playerId}/>);
@@ -57,7 +57,7 @@ class Cahoots extends Component {
         return (<NumberOfPlayers navigator={navigator} title="Enter the number of players"/>);
 
       case 'ChooseTheme':
-        return (<ChooseTheme navigator={navigator} title="Choose the theme"/>);
+        return (<ChooseTheme navigator={navigator} title="Choose the theme" numOfPlayers={route.numOfPlayers}/>);
       case 'ModeratorActions':
         return(<ModeratorActions navigator={navigator} title="Moderator Screen" gameId={route.gameId} playerId={route.playerId}/>);
       case 'PlayerCards':

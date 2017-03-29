@@ -27,6 +27,7 @@ export class GenerateGameCode extends Component{
 		}
 	}
 
+
 	pushNewGame(){
 		//This function pushes a new Game to the database.
 		this.state.gameId = Math.random().toString(36).substr(2, 6); //Generate an alphanumeric 6 digit string
@@ -34,17 +35,34 @@ export class GenerateGameCode extends Component{
 		var playersEntry = this.state.gameId.concat("-players");
 		var playersEntryWithSlash = this.state.gameId.concat("-players/");
 		var PlayerPath = 'Players/'.concat(playersEntryWithSlash);
-
+		var numCahoots = 2;
+		if (this.props.numOfPlayers === 4) {
+			numCahoots = 1;
+		}
+		else if (this.props.numOfPlayers === 5) {
+			numCahoots = 2;
+		}
+		else if (this.props.numOfPlayers === 6) {
+			numCahoots = 2;
+		}
+		var numplayer = this.props.numOfPlayers
+		console.log("num of players: " + this.props.numOfPlayers)
 		firebase.database().ref('Game/' + this.state.gameId).set({
 			'adminId': 0,
-			'numPlayers': 4,
+			'numPlayers': numplayer,
+			'numCahoots': numCahoots,
 			'theme': 0,
 			'cahootVote': 0,
-			//'players': [0]
+			'everyoneVote': 0
 		})
 		firebase.database().ref('Players/' + playersEntry).set({
+			'total_vote': 0,
 			'gameId': this.state.gameId,
-			'totalNumPlayers': 1
+			// This value we use to check against when people are added to the database
+			'totalNumPlayers': 1,
+			// This value is the one we minus from when someone dies, helps us render the "everyoneVote page"
+			'totalNumVoters': numplayer - 1
+
 		})
 
 		firebase.database().ref(PlayerPath + 0).set({
@@ -81,7 +99,7 @@ export class GenerateGameCode extends Component{
           </Text>
           <TouchableButton style={styles.back} text={"BACK"} onButtonClick={this.onPressBack.bind(this)}/>
 
-        <TouchableButton  onButtonClick={this.onPressModScreen.bind(this)} text={"START"}/>
+          <TouchableButton  onButtonClick={this.onPressModScreen.bind(this)} text={"START"}/>
       </View>
 
       // IF state.
@@ -109,6 +127,7 @@ export class EnterGameCode extends Component {
 		}
 	}
 
+
 	pushConnectingScene(code){
 		// overwriting entire game, want to just set player field
 		this.props.navigator.push({
@@ -132,15 +151,25 @@ export class EnterGameCode extends Component {
       console.log('index is now '+index);
     }
     firebase.database().ref(playerPath + total).set({
+      'name': 'player',
+      // CHANGE THIS TO FB ID
+      'ismoderator': 0,
+      'facebookID': total,
       'ismoderator': 0,
       'status': 1,
-      'charId': index,
-      'charName': array[index].name
-    });
-    console.log("the myId state is : " + this.state.myId);
-    console.log("the charId state is : " + index);
-    console.log("the charName state is : " + array[index].name);
-    this.pushConnectingScene(code);
+      'numvotes': 0
+    }, function(error){
+        // Callback comes here
+        if(error){
+          console.log(error);
+        }
+        else{
+          self.incrementPlayers(playerPath, playersEntry);
+        }
+      }
+    );
+      console.log("the myId state is : " + this.state.myId);
+      this.pushConnectingScene(code);
   }
 
 	addPlayerToDatabase(code, totalNum) {
@@ -148,9 +177,11 @@ export class EnterGameCode extends Component {
     var numOfPlayers;
     var array;
 		console.log("IN ADD PLAYER")
-		var playersEntry = code.concat("-players/");
-		var playerPath = 'Players/'.concat(playersEntry);
+
 		gameRef.child(code).once('value', snapshot => {
+			var self = this;
+			var playersEntry = code.concat("-players/");
+			var playerPath = 'Players/'.concat(playersEntry);
 			if(snapshot.val() !== null){
 				console.log("Game exists");
 				total = totalNum - 1;
@@ -223,12 +254,28 @@ export class EnterGameCode extends Component {
 						console.log("Snapshot valu found");
        			totalCurrentPlayers = snapshot.val().totalNumPlayers;
        			totalCurrentPlayers = totalCurrentPlayers + 1;
-        		database.ref(playerPath).update({'totalNumPlayers': totalCurrentPlayers});
         		this.addPlayerToDatabase(code,totalCurrentPlayers);
+      		}
+      		else {
+      			console.log("NO GAME");
+      			Alert.alert('Invalid Game Code','The game code you have entered does not exist, please try again.',[{text: 'OK', onPress: () => console.log('OK Pressed')}], { cancelable: false });
       		}
     	})
 
 	}
+
+	incrementPlayers(playerPath, playersEntry){
+		playersRef.child(playersEntry).once('value', snapshot => {
+			console.log("BEFORE SNAPSHOT NOT = NULL");
+			    var totalCurrentPlayers;
+					if (snapshot.val() != null) {
+						console.log("Snapshot valu found");
+						totalCurrentPlayers = snapshot.val().totalNumPlayers;
+						totalCurrentPlayers = totalCurrentPlayers + 1;
+						database.ref(playerPath).update({'totalNumPlayers': totalCurrentPlayers});
+					}
+				});
+			}
 
 	onPressBack() {
     console.log("Back pressed in enter game code screen")
