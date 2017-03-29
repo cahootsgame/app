@@ -71,20 +71,23 @@ class PlayerCards extends Component {
 
   componentDidMount() {
 		console.log("The props player id is " + this.props.playerId);
-    var player = this.props.gameId+'-players/' + this.props.playerId;
-    var role = player.charName;
-    var isCahoot;
-		console.log("The role is " + role);
-    if (role === "Warlord") {
-      isCahoot = 1;
-    }
-    else {
-      isCahoot = 0;
-    }
-    // Render the vote page depending on which vote were doing
-    this.getVotePage(isCahoot);
-    // Check if i've died
-    this.checkStatus();
+    var path = this.props.gameId+'-players/' + this.props.playerId;
+    playersRef.child(path).on('value', snapshot => {
+      var player = snapshot.val(); 
+      var role = player.charName;
+      var isCahoot;
+  		console.log("The role is " + role);
+      if (role === "Warlord") {
+        isCahoot = 1;
+      }
+      else {
+        isCahoot = 0;
+      }
+      // Render the vote page depending on which vote were doing
+      this.getVotePage(isCahoot);
+      // Check if i've died
+      this.checkStatus();
+    });
 
   }
 
