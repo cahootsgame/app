@@ -8,7 +8,7 @@ import React, { Component } from 'react';
 import {EnterGameCode, GenerateGameCode} from './loadGame.js';
 import TouchableButton from './touchableButton';
 import NumberOfPlayers from './numberOfPlayers';
-
+import OpenURLButton from './messengerButton';
 import {
   AppRegistry,
   StyleSheet,
@@ -16,7 +16,9 @@ import {
   Text,
   View,
   Button,
-  TouchableHighlight
+  TouchableHighlight,
+  TouchableOpacity,
+  Linking
 } from 'react-native';
 
 // Can we assign player IDs here?
@@ -33,6 +35,7 @@ export default class LandingPage extends Component {
         <TouchableButton  onButtonClick={this.onPressStartNewGame.bind(this)} text={"START"}/>
         <TouchableButton onButtonClick={this.onPressConnectGame.bind(this)} text={"CONNECT TO AN EXISTING GAME"}/>
         <TouchableButton text={"HOW TO PLAY"}/>
+        <OpenURLButton url={'fb-messenger://app'} />
       </View>
     );
   }
@@ -43,7 +46,8 @@ export default class LandingPage extends Component {
       id: 'NumberOfPlayers',
 			fbID: this.props.fbID,
 			name: this.props.name,
-			fbProfilePic: this.props.fbProfilePic
+			fbProfilePic: this.props.fbProfilePic,
+      numOfPlayers: this.props.numOfPlayers
     })
 
   }
@@ -68,4 +72,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     fontWeight: "100",
   },
+	button: {
+		color: 'white',
+	}
 });

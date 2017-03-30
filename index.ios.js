@@ -58,6 +58,7 @@ class Cahoots extends Component {
 
       case 'ChooseTheme':
         return (<ChooseTheme navigator={navigator} title="Choose the theme" fbID={route.fbID} name={route.name} fbProfilePic={route.fbProfilePic}/>);
+
       case 'ModeratorActions':
         return(<ModeratorActions navigator={navigator} title="Moderator Screen" gameId={route.gameId} playerId={route.playerId}/>);
       case 'PlayerCards':

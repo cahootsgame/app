@@ -4,6 +4,7 @@ import {Grid,Row,Col} from 'react-native-easy-grid'
 import fb from './firebaseConfig.js';
 import Swiper from 'react-native-swiper'
 import AllPlayerStatus from './allPlayerStatus'
+import OpenURLButton from './messengerButton';
 
 var database = fb.database();
 var playersRef = database.ref().child('Players');
@@ -22,17 +23,25 @@ class PlayerCards extends Component {
 	 };
   }
 
-  getVotePate(){
+  getVotePage(isCahoot){
       var code = this.props.gameId;
 			//var codePlayers =
 			console.log("The code is " + this.props.gameId);
       gameRef.child(code).on('child_changed', snapshot =>{
         var value = snapshot.val();
         var key = snapshot.key;
-				console.log("IN GETVOTEPATE");
+				console.log("IN GET VOTE PATE");
         console.log(key);
         console.log(value);
-        if((key === 'cahootVote') && (value === 1)){
+        if((key === 'cahootVote') && (value === 1) && (isCahoot === 1)){
+          // If its time for the cahoots to vote
+            this.props.navigator.push({
+            id: 'VotingPage',
+            gameId: code
+          })
+        }
+        else if ((key === 'everyoneVote') && (value === 1)) {
+          // If its time for everyone to vote
             this.props.navigator.push({
             id: 'VotingPage',
             gameId: code
@@ -43,7 +52,7 @@ class PlayerCards extends Component {
 
   checkStatus(){
 		console.log("The game id in CHECK STATUS IS " + this.props.gameId);
-		var code = this.props.gameId+'-players/2';
+		var code = this.props.gameId+'-players/' + this.props.playerId;
 		playersRef.child(code).on('child_changed', snapshot =>{
 			var key = snapshot.key;
 			var value = snapshot.val();
@@ -60,14 +69,22 @@ class PlayerCards extends Component {
 
 	}
 
-  componentDidMount(){
+  componentDidMount() {
 		console.log("The props player id is " + this.props.playerId);
-    if(this.props.playerId == 2){
-      this.checkStatus();
+    var player = this.props.gameId+'-players/' + this.props.playerId;
+    var role = player.charName;
+    var isCahoot;
+    if (role === "Warlord") {
+      isCahoot = 1;
     }
-    if(this.props.playerId == 1) {
-      this.getVotePate();
+    else {
+      isCahoot = 0;
     }
+    // Render the vote page depending on which vote were doing
+    this.getVotePage(isCahoot);
+    // Check if i've died
+    this.checkStatus();
+
   }
 
   render() {
@@ -95,10 +112,17 @@ class PlayerCards extends Component {
           );*/
         case 'Warlord':
           return (
+            <Swiper>
             <View>
               <Text style={styles.title}>You are a Warlord</Text>
               <Text style={styles.body}>You are one of the bad guys, be discrete so no one can find you.</Text>
+							<OpenURLButton url={'fb-messenger://app'} />
             </View>
+            <View>
+              <AllPlayerStatus gameId={this.props.gameId}/>
+							<OpenURLButton url={'fb-messenger://app'} />
+            </View>
+            </Swiper>
           );
       }
     }
