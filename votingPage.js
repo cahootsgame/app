@@ -51,26 +51,29 @@ export default class VotingPage extends Component {
     var path = code.concat("-players");
     
     console.log("NAME IS: ")
-    playersRef.child(path).on('child_changed', snapshot => {
-      if(snapshot.val() !== null) {
-        var value = snapshot.val()
-        var key = snapshot.key;
-        console.log("IN LISTEN ON VOTES, PRINTING KEY" + key)
-        console.log("PRINTING VALUE" + value);
-        console.log("IN LISTENER, NUM PEOPLE VOTING: " + this.state.numPeopleVoting)
-        if((key === 'total_vote') && (value === this.state.numPeopleVoting)) {
-          console.log("IN IF")
-          //Reset total votes back to 0
-          var name = this.state.nameOfKilled
-          console.log("NAME IS: " + name)
-          database.ref('Players/' + path).update({'total_vote': 0});
-          //Resets cahootVote and everyoneVote back to 0
-          this.resetVote();
-          this.props.navigator.push({
-            id: 'VotingResults',
-            nameWhoGotKilled: name
-          })
-        }
+    playersRef.child(path).on('child_changed', snapshot => { 
+          if(snapshot.val() !== null) {
+            var value = snapshot.val()
+            var key = snapshot.key;
+
+            console.log("IN LISTEN ON VOTES, PRINTING KEY" + key)
+            console.log("PRINTING VALUE" + value);
+            console.log("IN LISTENER, NUM PEOPLE VOTING: " + this.state.numPeopleVoting)
+            if((key === 'total_vote') && (value === this.state.numPeopleVoting)) {
+              playersRef.child(path).once('value', snapshot => {
+              console.log("IN IF")
+              //Reset total votes back to 0
+              var name = snapshot.val().who_died
+              console.log("NAME IS: " + name)
+              database.ref('Players/' + path).update({'total_vote': 0});
+              //Resets cahootVote and everyoneVote back to 0
+              this.resetVote();
+              this.props.navigator.push({
+                id: 'VotingResults',
+                nameWhoGotKilled: name
+              })
+            });
+          }
       }
     });         
   }
@@ -263,7 +266,7 @@ getAllPlayers(){
       var name = playerToKill.name;
 			firebase.database().ref(playerPath + '/' + k).update({'status': 0}, () => {
         this.setState({nameOfKilled: name});
-        database.ref(playerPath).update({'total_vote': totalVotes});
+        database.ref(playerPath).update({'total_vote': totalVotes, 'who_died': name});
       });
       //this.resetVote();
     }

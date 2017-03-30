@@ -61,7 +61,8 @@ export class GenerateGameCode extends Component{
 			// This value we use to check against when people are added to the database
 			'totalNumPlayers': 1,
 			// This value is the one we minus from when someone dies, helps us render the "everyoneVote page"
-			'totalNumVoters': numplayer - 1
+			'totalNumVoters': numplayer - 1,
+      'who_died': ''
 
 		})
 
