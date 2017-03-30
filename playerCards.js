@@ -104,7 +104,7 @@ class PlayerCards extends Component {
             //Reset total votes back to 0
             var name = snapshot.val().who_died
             console.log("NAME IS: " + name)
-            Alert.alert(name + 'HAS DIED', 'Say your goodbyez', [{text: 'OK', onPress: () => console.log('OK Pressed')}], { cancelable: false });
+            Alert.alert(name + ' HAS DIED', 'Say your goodbyez', [{text: 'OK', onPress: () => console.log('OK Pressed')}], { cancelable: false });
             //Resets cahootVote and everyoneVote back to 0
           });
         }
@@ -145,11 +145,12 @@ class PlayerCards extends Component {
 							<View>
 	              <Text style={styles.title}>{this.state.citizenTitle}</Text>
 	              <Text style={styles.body}>{this.state.citizenBody}</Text>
+                <OpenURLButton url={'fb-messenger-api://app'} />
 	            </View>
         			<View>
 								<AllPlayerStatus gameId={this.props.gameId}/>
+                <OpenURLButton url={'fb-messenger-api://app'} />
         			</View>
-
 						</Swiper>
 
           );
@@ -166,11 +167,11 @@ class PlayerCards extends Component {
             <View>
               <Text style={styles.title}>You are a Warlord</Text>
               <Text style={styles.body}>You are one of the bad guys, be discrete so no one can find you.</Text>
-							<OpenURLButton url={'fb-messenger://app'} />
+							<OpenURLButton url={'fb-messenger-api://app'} />
             </View>
             <View>
               <AllPlayerStatus gameId={this.props.gameId}/>
-							<OpenURLButton url={'fb-messenger://app'} />
+							<OpenURLButton url={'fb-messenger-api://app'} />
             </View>
             </Swiper>
           );
@@ -205,10 +206,14 @@ const styles = StyleSheet.create({
 				justifyContent: 'center',
     },
 		item: {
-	         backgroundColor: 'blue',
-	         margin: 3,
+	         backgroundColor: '#68dd90',
+	         margin: 10,
 	         width: 150,
-					 height: 100
+					 height: 100,
+           fontSize: 20,
+           textAlign: 'center',
+           fontWeight: "400",
+           marginTop: 20
 
 	     }
 });

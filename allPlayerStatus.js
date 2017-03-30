@@ -182,22 +182,31 @@ const styles = StyleSheet.create({
  },
  list: {
         flexDirection: 'row',
+        marginTop: 200,
         flexWrap: 'wrap',
 				alignItems: 'flex-start',
 				justifyContent: 'center',
     },
 	alive: {
-	         backgroundColor: 'blue',
-	         margin: 3,
+	         backgroundColor: '#68dd90',
+	         margin: 10,
 	         width: 150,
-					 height: 100
+					 height: 100,
+           fontSize: 20,
+           textAlign: 'center',
+           fontWeight: "400",
+           marginTop: 20
 
 	     },
 	dead: {
-		backgroundColor: 'red',
-		margin: 3,
+		backgroundColor: '#dd6868',
+		margin: 10,
 		width: 150,
-		height: 100
+		height: 100,
+    fontSize: 20,
+    textAlign: 'center',
+    fontWeight: "400",
+    marginTop: 20
 	}
 });
 

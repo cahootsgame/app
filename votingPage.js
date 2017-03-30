@@ -365,10 +365,13 @@ getAllPlayers(){
     console.log("CAHOOT VOTE: " + this.state.cahootVote);
     console.log("EVERYONE VOTE: " + this.state.everyoneVote);
     return(
+        <View>
+        <Text style={styles.title}>Cast your votes!</Text>
         <ListView contentContainerStyle = {styles.list}
           dataSource = {this.state.dataSource}
           renderRow={(item) => this.renderRow(item)}
         />
+        </View>
     )
   }
 }
@@ -389,27 +392,36 @@ var styles = StyleSheet.create({
   list: {
     justifyContent: 'center',
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
+    marginTop: 100,
   },
   row: {
     justifyContent: 'center',
     padding: 5,
     margin: 8,
-    width: 74,
+    width: 80,
     height: 70,
     backgroundColor: '#F6F6F6',
     alignItems: 'center',
     borderWidth: 1,
     borderRadius: 5,
-    borderColor: '#CCC'
+    borderColor: '#CCC',
   },
   thumb: {
-    width: 80,
+    width: 90,
     height: 14
   },
   text: {
     flex: 1,
     marginTop: 5,
-    fontWeight: 'bold'
-  }
+    fontWeight: '200'
+  },
+  title: {
+    fontSize: 40,
+    textAlign: 'center',
+    marginBottom: 10,
+    fontWeight: "100",
+    color: 'black',
+    marginTop: 100
+  },
 });
