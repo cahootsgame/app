@@ -272,7 +272,7 @@ getAllPlayers(){
         this.setState({nameOfKilled: name});
         database.ref(playerPath).update({'total_vote': totalVotes, 'who_died': name});
       });
-      Alert.alert(name + 'HAS DIED',[{text: 'OK', onPress: () => console.log('OK Pressed')}], { cancelable: false });
+      Alert.alert(name + 'HAS DIED', 'Say your goodbyez', [{text: 'OK', onPress: () => console.log('OK Pressed')}], { cancelable: false });
     }
 
 

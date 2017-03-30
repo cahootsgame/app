@@ -52,7 +52,7 @@ class PlayerCards extends Component {
       });
   }
 
-  checkStatus(){
+  checkStatus() {
 		console.log("The game id in CHECK STATUS IS " + this.props.gameId);
 		var code = this.props.gameId+'-players/' + this.props.playerId;
 		playersRef.child(code).on('child_changed', snapshot =>{
@@ -61,17 +61,36 @@ class PlayerCards extends Component {
 			console.log("The key in CHECK STATUS IS" + key);
 			console.log("the value in CHECK STATUS IS " + value);
 			if((key === 'status') && (value === 0)){
+
 				this.setState({citizenTitle: "You were a Citizen.", citizenBody: "Now you are DEAD."});
 			}
 		});
   }
 
-	getPlayerStatus(){
-		//This function gets the player status, and renders them.
-
+	listenOnWhoDied(){
+		var code = this.props.gameId
+    var path = code.concat("-players");
+    
+    console.log("NAME IS: ")
+    playersRef.child(path).on('child_changed', snapshot => { 
+      if(snapshot.val() !== null) {
+        var value = snapshot.val()
+        var key = snapshot.key;
+        if(key === 'who_died') {
+          playersRef.child(path).once('value', snapshot => {
+            //Reset total votes back to 0
+            var name = snapshot.val().who_died
+            console.log("NAME IS: " + name)
+            Alert.alert(name + 'HAS DIED', 'Say your goodbyez', [{text: 'OK', onPress: () => console.log('OK Pressed')}], { cancelable: false });
+            //Resets cahootVote and everyoneVote back to 0
+          });
+        }
+      }
+    });         
 	}
 
   componentDidMount() {
+    listenOnWhoDied();
 		console.log("The props player id is " + this.props.playerId);
     var path = this.props.gameId+'-players/' + this.props.playerId;
     playersRef.child(path).on('value', snapshot => {
