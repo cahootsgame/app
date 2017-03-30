@@ -90,7 +90,7 @@ export class GenerateGameCode extends Component{
 			gameId: this.state.gameId,
 			playerId: this.state.myId
 
-		})
+		});
 	}
   onPressBack() {
     console.log("Back pressed in game id screen")
@@ -148,7 +148,8 @@ export class EnterGameCode extends Component {
   assign(numOfPlayers, array, index, code, playerPath, total, playersEntry, name, fbID, fbProfilePic){
     var self = this;
     console.log("initial index is "+index);
-    while (array[index].assigned){
+
+		while (array[index].assigned){
       console.log("array[index] is "+array[index]+'and index is '+index);
       if(index === numOfPlayers-2){
         index = 0;
@@ -158,6 +159,11 @@ export class EnterGameCode extends Component {
       }
       console.log('index is now '+index);
     }
+
+		var charName = array[index].name;
+		console.log("The name is");
+		console.log(name);
+		console.log("The player path is" + playerPath)
     firebase.database().ref(playerPath + total).set({
       'name': name,
 			'ismoderator': 0,
@@ -167,13 +173,15 @@ export class EnterGameCode extends Component {
       'status': 1,
       'numvotes': 0,
       'charId': index,
-      'charName': array[index].name
+      'charName': charName
     }, function(error){
         // Callback comes here
         if(error){
           console.log(error);
         }
         else{
+					console.log("playerPath is" + playerPath);
+					console.log("playersEntry" + playersEntry);
           self.incrementPlayers(playerPath, playersEntry, code);
         }
       }
@@ -219,7 +227,7 @@ export class EnterGameCode extends Component {
               console.log(array[charId]);
             }
             if(count === length){
-              self.assign(numOfPlayers, array, index, code, playerPath, total, playersEntry, this.props.name, this.props.fbID, this.props.fbProfilePic);
+              self.assign(numOfPlayers, array, index, code, playerPath, total, playersEntry, self.props.name, self.props.fbID, self.props.fbProfilePic);
             }
             count++;
           });
@@ -255,6 +263,7 @@ export class EnterGameCode extends Component {
 	}
 
 	incrementPlayers(playerPath, playersEntry, code){
+		console.log("IN INCREMENT PLAYERS")
 		playersRef.child(playersEntry).once('value', snapshot => {
 			console.log("BEFORE SNAPSHOT NOT = NULL");
 			    var totalCurrentPlayers;

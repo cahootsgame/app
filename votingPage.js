@@ -72,9 +72,9 @@ export default class VotingPage extends Component {
   listenOnVotes() {
     var code = this.props.gameId
     var path = code.concat("-players");
-    
+
     console.log("NAME IS: ")
-    playersRef.child(path).on('child_changed', snapshot => { 
+    playersRef.child(path).on('child_changed', snapshot => {
           if(snapshot.val() !== null) {
             var value = snapshot.val()
             var key = snapshot.key;
@@ -90,19 +90,19 @@ export default class VotingPage extends Component {
               playersRef.child(path).once('value', snapshot => {
               console.log("IN IF")
               //Reset total votes back to 0
-             
+
               var name = snapshot.val().who_died
               console.log("NAME IS: " + name)
               //console.log("SETTING TOTAL NUM VOTERS TO: " + new_num_voters)
               database.ref('Players/' + path).update({'total_vote': 0});
-              
+
               //Resets cahootVote and everyoneVote back to 0
               this.resetVote();
 
             });
           }
       }
-    });         
+    });
   }
 
 getAllPlayers(){
@@ -169,7 +169,7 @@ getAllPlayers(){
         var cahoot = snapshot.val().cahootVote;
         var everyone = snapshot.val().everyoneVote;
         this.setState({'cahootVote': cahoot, 'everyoneVote': everyone}, () => {
-            this.getAllPlayers(); 
+            this.getAllPlayers();
         });
       }
     });
@@ -211,7 +211,7 @@ getAllPlayers(){
               var player = snapshot.val()[i];
               if(player.facebookID === playerID){
                 //Someone wanted to kill this player, add 1 to their vote.
-                
+
                 numVotes = player.numvotes + 1;
                 console.log("NUMVOTES IS NOW: " + numVotes)
                 var currentPlayerPath = playerPath + '/' + i;
@@ -337,7 +337,7 @@ getAllPlayers(){
             }
         })
         this.resetVote();
-        
+
       }
     }
 

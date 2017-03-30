@@ -39,7 +39,7 @@ class FBLoginButton extends Component {
 		 console.log("Data is ");
 		 console.log(data);
 		 this.setState({logged: true}, () => {
-			 this.requestFBGraphAPI(data).bind(this);
+			 this.requestFBGraphAPI(data);
 		 });
 		}
 	 }
@@ -50,6 +50,9 @@ class FBLoginButton extends Component {
 		console.log("IN REQUEST THINGY");
 		var reqParams = 'email,name,first_name,middle_name,last_name';
 		var accessToken = data.accessToken;
+		console.log('the this before the const');
+		console.log(this);
+		var self = this;
 		const infoRequest = new GraphRequest(
 			'/me',
 			{
@@ -62,8 +65,53 @@ class FBLoginButton extends Component {
 					}
 				}
 			},
-			this.responseInfoCallback.bind(this)
+			function(error, result){
+				console.log("in responseinfocallback");
+				if(error){
+					console.log("Error")
+					alert('Error fetching data: ' + error.toString());
+			      console.log(Object.keys(error));// print all enumerable
+			      console.log(error.errorMessage); // print error message
+				}
+				else{
+					//alert('Success fetching data: ' + result.toString());
+			      //console.log(Object.keys(result));
+						console.log("The result is");
+						console.log(result);
+			      meow_json = JSON.stringify(result); // result => JSON
+			      console.log(meow_json); // print JSON
+						var name = result['first_name'];
+						var fbID = result['id'];
+						//Once we have these values Render their screen.
+						//this.onNextPressed(name, fbID).bind(this);
+						var profilePicture = "https://graph.facebook.com/" + fbID + "/picture?type=large"
+						console.log('calling request FB Graph API');
+						if(self.state.logged){
+							console.log("Already logged, setting state")
+							self.setState({
+								name: name,
+								fbID: fbID,
+								pic: profilePicture,
+							});
+						}
+						else{
+							/*this.props. ({
+								id: 'LandingPage',
+								fbID: fbID,
+								name: name,
+								fbProfilePic: profilePicture
+							});*/
+							self.setState({
+								logged: true,
+								name: name,
+								fbID: fbID,
+								pic: profilePicture
+							});
+						}
+				}
+			}
 		);
+
 		new GraphRequestManager().addRequest(infoRequest).start();
 	}
 
@@ -71,6 +119,8 @@ class FBLoginButton extends Component {
 		//Get the user id, profile picture.
 		var profilePicture = "https://graph.facebook.com/" + fbID + "/picture?type=large"
 		console.log('calling request FB Graph API');
+		console.log("The name in Login.js is")
+		console.log(name);
     this.props.navigator.push({
 			id: 'LandingPage',
 			fbID: fbID,
@@ -79,7 +129,7 @@ class FBLoginButton extends Component {
 		});
   }
 
-	responseInfoCallback(error: ?Object, result: ?Object){
+	responseInfoCallback(error, result){
 		console.log("in responseinfocallback");
 		if(error){
 			console.log("Error")
@@ -89,7 +139,9 @@ class FBLoginButton extends Component {
 		}
 		else{
 			//alert('Success fetching data: ' + result.toString());
-	      console.log(Object.keys(result));
+	      //console.log(Object.keys(result));
+				console.log("The result is");
+				console.log(result);
 	      meow_json = JSON.stringify(result); // result => JSON
 	      console.log(meow_json); // print JSON
 				var name = result['first_name'];
@@ -171,7 +223,7 @@ returnLoggedRenderView(){
 	{this.returnRenderView(styles.buttonLogOut)}
 </View>
 <View>
-	<TouchableButton style={styles.back} onButtonClick={()=>this.onNextPressed(this)} text={"CONTINUE"}/>
+	<TouchableButton style={styles.back} onButtonClick={()=>this.onNextPressed(this.state.name, this.state.fbID)} text={"CONTINUE"}/>
 
 </View>
 		</View>

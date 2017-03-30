@@ -63,7 +63,7 @@ class Cahoots extends Component {
         return(<ModeratorActions navigator={navigator} title="Moderator Screen" gameId={route.gameId} playerId={route.playerId}/>);
 
       case 'PlayerCards':
-        return(<PlayerCards navigator={navigator} title="Wait for players to connect" role={route.role} status={route.status} gameId={route.gameId} playerId={route.playerId}/>);
+        return(<PlayerCards navigator={navigator} title="Wait for players to connect" role={route.role} gameId={route.gameId} playerId={route.playerId}/>);
 
       case 'VotingPage':
           return(<VotingPage navigator={navigator} gameId={route.gameId} playerId={route.playerId}/>);

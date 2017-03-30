@@ -113,7 +113,6 @@ export default class ConnectingPlayers extends Component {
       self.props.navigator.push({
           id: 'PlayerCards',
           role: name,
-          status: 1,
           gameId: self.props.gameId,
   				playerId: self.props.playerId
       });
