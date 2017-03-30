@@ -43,7 +43,29 @@ export default class VotingPage extends Component {
 
     this.numVoting();
     this.setVoteInfo();
+    this.listenOnVoteInitiation();
     this.listenOnVotes();
+
+
+  }
+
+  listenOnVoteInitiation() {
+    var code = this.props.gameId
+    var gamePath = 'Game/'.concat(code);
+    gameRef.child(code).on('child_changed', snapshot => {
+      if(snapshot.val() !== null){
+        var key = snapshot.key;
+        var value = snapshot.val()
+        if (key === 'cahootVote') {
+          this.setState({cahootVote: value})
+        }
+        else if (key === 'everyoneVote') {
+          this.setState({'everyoneVote': value})
+        }
+
+      }
+
+    });
 
   }
 
@@ -60,6 +82,10 @@ export default class VotingPage extends Component {
             console.log("IN LISTEN ON VOTES, PRINTING KEY" + key)
             console.log("PRINTING VALUE" + value);
             console.log("IN LISTENER, NUM PEOPLE VOTING: " + this.state.numPeopleVoting)
+            if (key === 'totalNumVoters') {
+              var num_voting = value;
+              this.setState({numPeopleVoting: num_voting});
+            }
             if((key === 'total_vote') && (value === this.state.numPeopleVoting)) {
               playersRef.child(path).once('value', snapshot => {
               console.log("IN IF")
@@ -67,7 +93,7 @@ export default class VotingPage extends Component {
              
               var name = snapshot.val().who_died
               console.log("NAME IS: " + name)
-              consol.log("SETTING TOTAL NUM VOTERS TO: " + new_num_voters)
+              //console.log("SETTING TOTAL NUM VOTERS TO: " + new_num_voters)
               database.ref('Players/' + path).update({'total_vote': 0});
               
               //Resets cahootVote and everyoneVote back to 0
