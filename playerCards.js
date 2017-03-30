@@ -1,5 +1,5 @@
 import React, { Component, } from 'react'
-import { View, Text, StyleSheet, ListView } from 'react-native'
+import { View, Text, StyleSheet, Alert, ListView } from 'react-native'
 import {Grid,Row,Col} from 'react-native-easy-grid'
 import fb from './firebaseConfig.js';
 import Swiper from 'react-native-swiper'
@@ -68,14 +68,19 @@ class PlayerCards extends Component {
   }
 
 	listenOnWhoDied(){
+    console.log("IN LISTEN ON WHO DIED")
 		var code = this.props.gameId
     var path = code.concat("-players");
-    
-    console.log("NAME IS: ")
+
     playersRef.child(path).on('child_changed', snapshot => { 
       if(snapshot.val() !== null) {
         var value = snapshot.val()
         var key = snapshot.key;
+        console.log("KEY IS: ")
+        console.log(key);
+        console.log("VALUE IS: ");
+        console.log(value)
+
         if(key === 'who_died') {
           playersRef.child(path).once('value', snapshot => {
             //Reset total votes back to 0
