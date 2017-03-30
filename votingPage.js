@@ -305,6 +305,7 @@ getAllPlayers(){
               }
             }
         })
+        this.resetVote();
         this.props.navigator.pop();
       }
     }

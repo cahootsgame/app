@@ -22,7 +22,7 @@ class PlayerCards extends Component {
 	 };
   }
 
-  getVotePage(isCahoot){
+  getVotePage(isCahoot,status){
       var code = this.props.gameId;
 			//var codePlayers =
 			console.log("The code is " + this.props.gameId);
@@ -35,19 +35,23 @@ class PlayerCards extends Component {
 				console.log("The isCahoot is " + isCahoot)
         if((key === 'cahootVote') && (value === 1) && (isCahoot === 1)){
           // If its time for the cahoots to vote
+          if (status !== 0) {
             this.props.navigator.push({
             id: 'VotingPage',
             gameId: code,
             playerId: this.props.playerId
-          })
+            })
+          }
         }
         else if ((key === 'everyoneVote') && (value === 1)) {
           // If its time for everyone to vote
+          if (status !== 0) {
             this.props.navigator.push({
             id: 'VotingPage',
             gameId: code,
             playerId: this.props.playerId
-          })
+            })
+          }
         }
       });
   }
@@ -101,6 +105,7 @@ class PlayerCards extends Component {
     playersRef.child(path).on('value', snapshot => {
       var player = snapshot.val(); 
       var role = player.charName;
+      var playerstatus = player.status;
       var isCahoot;
   		console.log("The role is " + role);
       if (role === "Warlord") {
@@ -110,7 +115,7 @@ class PlayerCards extends Component {
         isCahoot = 0;
       }
       // Render the vote page depending on which vote were doing
-      this.getVotePage(isCahoot);
+      this.getVotePage(isCahoot,playerstatus);
       // Check if i've died
       this.checkStatus();
     });
