@@ -64,16 +64,15 @@ export default class VotingPage extends Component {
               playersRef.child(path).once('value', snapshot => {
               console.log("IN IF")
               //Reset total votes back to 0
+             
               var name = snapshot.val().who_died
               console.log("NAME IS: " + name)
+              consol.log("SETTING TOTAL NUM VOTERS TO: " + new_num_voters)
               database.ref('Players/' + path).update({'total_vote': 0});
+              
               //Resets cahootVote and everyoneVote back to 0
               this.resetVote();
-              /*this.props.navigator.push({
-                id: 'VotingResults',
-                nameWhoGotKilled: name
-              })*/
-              this.props.navigator.pop();
+
             });
           }
       }
@@ -96,7 +95,7 @@ getAllPlayers(){
       console.log("The ")
       //snapshot.val() is an object. We know the number of keys, thus iterate through it
       var totalPlayers = snapshot.val().totalNumPlayers;
-      for(var i = 0; i<totalPlayers; i++) {
+      for(var i = 0; i < totalPlayers; i++) {
 
         //player is an object which represents player i.
         console.log("The snapshot value is");
@@ -112,13 +111,13 @@ getAllPlayers(){
         }
         //@TODO : To remove this hardcoded thing
         //player['name'] = 'player' + i;
-        if (player.ismoderator !== 1 && this.state.cahootVote === 1 && player.charName === "Citizen") {
+        if (player.ismoderator !== 1 && this.state.cahootVote === 1 && player.charName === "Citizen" && player.status === 1) {
 
             playerArr.push(player);
             console.log("The player is arr");
             console.log(playerArr);
         }
-        if (player.ismoderator !== 1 && this.state.everyoneVote === 1) {
+        if (player.ismoderator !== 1 && this.state.everyoneVote === 1 && player.status === 1) {
             playerArr.push(player);
             console.log("The player is arr");
             console.log(playerArr);
@@ -254,8 +253,9 @@ getAllPlayers(){
       if(snapshot.val() !== null){
         console.log("Game exists");
         // ACTIVATE VOTE FOR CAHOOTS
-        database.ref(gamePath).update({'cahootVote': 0});
-        database.ref(gamePath).update({'everyoneVote': 0});
+        this.setState({cahootVote: 0, everyoneVote: 0});
+        database.ref(gamePath).update({'cahootVote': 0, everyoneVote: 0});
+        this.props.navigator.pop();
       }
     })
   }
@@ -269,10 +269,15 @@ getAllPlayers(){
       var playerPath = 'Players/'.concat(playersEntry);
       var name = playerToKill.name;
 			firebase.database().ref(playerPath + '/' + k).update({'status': 0}, () => {
-        this.setState({nameOfKilled: name});
-        database.ref(playerPath).update({'total_vote': totalVotes, 'who_died': name});
+         var new_num_voters = this.state.numPeopleVoting - 1;
+         console.log("NEW_NUM_VOTERS " + new_num_voters)
+         console.log("this.state.numPeopleVoting is being set to: " + new_num_voters)
+
+        this.setState({nameOfKilled: name, numPeopleVoting: new_num_voters});
+        //console.log("actual value of this.state.numPeopleVoting: " + this.state.numPeopleVoting)
+        database.ref(playerPath).update({'total_vote': totalVotes, 'who_died': name, 'totalNumVoters': new_num_voters});
       });
-      Alert.alert(name + 'HAS DIED', 'Say your goodbyez', [{text: 'OK', onPress: () => console.log('OK Pressed')}], { cancelable: false });
+      //Alert.alert(name + 'HAS DIED', 'Say your goodbyez', [{text: 'OK', onPress: () => console.log('OK Pressed')}], { cancelable: false });
     }
 
 
@@ -306,7 +311,7 @@ getAllPlayers(){
             }
         })
         this.resetVote();
-        this.props.navigator.pop();
+        
       }
     }
 

@@ -18,24 +18,31 @@ class PlayerCards extends Component {
     super(props)
 	 this.state = {
 		 citizenTitle: "You are a Citizen",
-		 citizenBody: "You do not have any special powers but keep an eye out for the bad guys so you can exile them."
+		 citizenBody: "You do not have any special powers but keep an eye out for the bad guys so you can exile them.",
+     status: 1
 	 };
   }
 
   getVotePage(isCahoot,status){
+      console.log("START OF GET VOTE PAGE: " + status)
+      var constant = status;
+      console.log("CONSTANT IS: " + constant)
+      //debugger;
       var code = this.props.gameId;
 			//var codePlayers =
 			console.log("The code is " + this.props.gameId);
-      gameRef.child(code).on('child_changed', snapshot =>{
+      gameRef.child(code).on('child_changed', snapshot => {
         var value = snapshot.val();
         var key = snapshot.key;
 				console.log("IN GET VOTE PATE");
+        console.log("IN SNAPSHOT STATUS IS: " + status);
+        console.log("IN SNAPSHOT CONSTANT IS: " + constant);
         console.log(key);
         console.log(value);
 				console.log("The isCahoot is " + isCahoot)
-        if((key === 'cahootVote') && (value === 1) && (isCahoot === 1)){
+        if((key === 'cahootVote') && (value === 1) && (isCahoot === 1)) {
           // If its time for the cahoots to vote
-          if (status !== 0) {
+          if (this.state.status === 1) {
             this.props.navigator.push({
             id: 'VotingPage',
             gameId: code,
@@ -44,8 +51,14 @@ class PlayerCards extends Component {
           }
         }
         else if ((key === 'everyoneVote') && (value === 1)) {
+          //console.log("IN EVERYONE VOTE ")
+          //console.log("STATUS IN EVERYONE VOTE IS: " + status)
+          //console.log("CONSTANT IN EVERYONE VOTE IS: " + constant)
           // If its time for everyone to vote
-          if (status !== 0) {
+          if (this.state.status === 1) {
+            //console.log("IN STATUS === 1");
+            //console.log("STATUS IN IF IS: " + status)
+            //console.log("CONSTANT IN IF IS: " + constant)
             this.props.navigator.push({
             id: 'VotingPage',
             gameId: code,
@@ -59,14 +72,14 @@ class PlayerCards extends Component {
   checkStatus() {
 		console.log("The game id in CHECK STATUS IS " + this.props.gameId);
 		var code = this.props.gameId+'-players/' + this.props.playerId;
-		playersRef.child(code).on('child_changed', snapshot =>{
+		playersRef.child(code).on('child_changed', snapshot => {
 			var key = snapshot.key;
 			var value = snapshot.val();
-			console.log("The key in CHECK STATUS IS" + key);
-			console.log("the value in CHECK STATUS IS " + value);
+			//console.log("The key in CHECK STATUS IS" + key);
+			//console.log("the value in CHECK STATUS IS " + value);
 			if((key === 'status') && (value === 0)){
-
-				this.setState({citizenTitle: "You were a Citizen.", citizenBody: "Now you are DEAD."});
+        console.log("SETTING STATE TO 0")
+				this.setState({citizenTitle: "You were a Citizen.", citizenBody: "Now you are DEAD.", status: 0});
 			}
 		});
   }
@@ -99,23 +112,25 @@ class PlayerCards extends Component {
 	}
 
   componentDidMount() {
+    console.log("IN COMPONENT DID MOUNT PLAYER CARDS")
     this.listenOnWhoDied();
 		console.log("The props player id is " + this.props.playerId);
     var path = this.props.gameId+'-players/' + this.props.playerId;
     playersRef.child(path).on('value', snapshot => {
       var player = snapshot.val(); 
       var role = player.charName;
-      var playerstatus = player.status;
+      var playerStatus = player.status;
+      console.log("STATUS IN COMPONENT DID MOUNT IS: " + playerStatus)
       var isCahoot;
   		console.log("The role is " + role);
       if (role === "Warlord") {
         isCahoot = 1;
       }
       else {
-        isCahoot = 0;
+        isCahoot = 0
       }
       // Render the vote page depending on which vote were doing
-      this.getVotePage(isCahoot,playerstatus);
+      this.getVotePage(isCahoot,playerStatus);
       // Check if i've died
       this.checkStatus();
     });
