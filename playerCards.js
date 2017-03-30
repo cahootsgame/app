@@ -20,6 +20,8 @@ class PlayerCards extends Component {
 	 this.state = {
 		 citizenTitle: "You are a Citizen",
 		 citizenBody: "You do not have any special powers but keep an eye out for the bad guys so you can exile them.",
+     warlordTitle: "You are a Warlord",
+     warlordBody: "You are one of the bad guys, be discrete so no one can find you.",
      status: 1
 	 };
   }
@@ -80,7 +82,12 @@ class PlayerCards extends Component {
 			//console.log("the value in CHECK STATUS IS " + value);
 			if((key === 'status') && (value === 0)){
         console.log("SETTING STATE TO 0")
-				this.setState({citizenTitle: "You were a Citizen.", citizenBody: "Now you are DEAD.", status: 0});
+        if(this.props.role === "Citizen"){
+          this.setState({citizenTitle: "You were a Citizen.", citizenBody: "Now you are DEAD.", status: 0});
+        }
+				else if (this.props.role === "Warlord"){
+          this.setState({warlordTitle: "You were a Warlord.", warlordBody: "Now you are DEAD.", status: 0});
+        }
 			}
 		});
   }
@@ -165,8 +172,8 @@ class PlayerCards extends Component {
           return (
             <Swiper>
             <View>
-              <Text style={styles.title}>You are a Warlord</Text>
-              <Text style={styles.body}>You are one of the bad guys, be discrete so no one can find you.</Text>
+              <Text style={styles.title}>{this.state.warlordTitle}</Text>
+              <Text style={styles.body}>{this.state.warlordBody}</Text>
 							<OpenURLButton url={'fb-messenger-api://app'} />
             </View>
             <View>

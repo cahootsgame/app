@@ -24,7 +24,7 @@ class FBLoginButton extends Component {
 			gameId: '',
 			logged: false,
 			name: '',
-			pic: ''
+			pic: 'https://d13yacurqjgara.cloudfront.net/users/104548/screenshots/1900196/white_sqare.png'
 		}
 	}
 
