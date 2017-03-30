@@ -42,13 +42,13 @@ class Cahoots extends Component {
         return (<Login navigator={navigator} title="login"/>);
 
       case 'LandingPage':
-        return (<LandingPage navigator={navigator} title="Start new game or connect" fbID={route.fbID} name={route.name} fbProfilePic={route.fbProfilePic}/>);
+        return (<LandingPage navigator={navigator} title="Start new game or connect" numOfPlayers={route.numOfPlayers} fbID={route.fbID} name={route.name} fbProfilePic={route.fbProfilePic}/>);
 
       case 'EnterGameCode':
-        return (<EnterGameCode navigator={navigator} title="Enter new game code" fbID={route.fbID} name={route.name} fbProfilePic={route.fbProfilePic} />);
+        return (<EnterGameCode navigator={navigator} title="Enter new game code" numOfPlayers={route.numOfPlayers} fbID={route.fbID} name={route.name} fbProfilePic={route.fbProfilePic} />);
 
 			case 'GenerateGameCode':
-				return(<GenerateGameCode navigator={navigator} title="Enter new game code" fbID={route.fbID} name={route.name} fbProfilePic={route.fbProfilePic}/>);
+				return(<GenerateGameCode navigator={navigator} title="Enter new game code" numOfPlayers={route.numOfPlayers} fbID={route.fbID} name={route.name} fbProfilePic={route.fbProfilePic}/>);
 
 			case 'ConnectingPlayers':
 				return(<ConnectingPlayers navigator={navigator} title="Wait for players to connect" gameId={route.gameId} playerId={route.playerId}/>);
@@ -57,7 +57,7 @@ class Cahoots extends Component {
         return (<NumberOfPlayers navigator={navigator} title="Enter the number of players" fbID={route.fbID} name={route.name} fbProfilePic={route.fbProfilePic}/>);
 
       case 'ChooseTheme':
-        return (<ChooseTheme navigator={navigator} title="Choose the theme" fbID={route.fbID} name={route.name} fbProfilePic={route.fbProfilePic}/>);
+        return (<ChooseTheme navigator={navigator} title="Choose the theme" numOfPlayers={route.numOfPlayers} fbID={route.fbID} name={route.name} fbProfilePic={route.fbProfilePic}/>);
 
       case 'ModeratorActions':
         return(<ModeratorActions navigator={navigator} title="Moderator Screen" gameId={route.gameId} playerId={route.playerId}/>);
