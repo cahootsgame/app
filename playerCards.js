@@ -1,5 +1,5 @@
 import React, { Component, } from 'react'
-import { View, Text, StyleSheet, ListView } from 'react-native'
+import { View, Text, StyleSheet, Alert, ListView } from 'react-native'
 import {Grid,Row,Col} from 'react-native-easy-grid'
 import fb from './firebaseConfig.js';
 import Swiper from 'react-native-swiper'
@@ -19,72 +19,122 @@ class PlayerCards extends Component {
     super(props)
 	 this.state = {
 		 citizenTitle: "You are a Citizen",
-		 citizenBody: "You do not have any special powers but keep an eye out for the bad guys so you can exile them."
+		 citizenBody: "You do not have any special powers but keep an eye out for the bad guys so you can exile them.",
+     status: 1
 	 };
   }
 
-  getVotePage(isCahoot){
+  getVotePage(isCahoot,status){
+      console.log("START OF GET VOTE PAGE: " + status)
+      var constant = status;
+      console.log("CONSTANT IS: " + constant)
+      //debugger;
       var code = this.props.gameId;
 			//var codePlayers =
 			console.log("The code is " + this.props.gameId);
-      gameRef.child(code).on('child_changed', snapshot =>{
+      gameRef.child(code).on('child_changed', snapshot => {
         var value = snapshot.val();
         var key = snapshot.key;
 				console.log("IN GET VOTE PATE");
+        console.log("IN SNAPSHOT STATUS IS: " + status);
+        console.log("IN SNAPSHOT CONSTANT IS: " + constant);
         console.log(key);
         console.log(value);
-        if((key === 'cahootVote') && (value === 1) && (isCahoot === 1)){
+				console.log("The isCahoot is " + isCahoot)
+        if((key === 'cahootVote') && (value === 1) && (isCahoot === 1)) {
           // If its time for the cahoots to vote
+          if (this.state.status === 1) {
             this.props.navigator.push({
             id: 'VotingPage',
-            gameId: code
-          })
+            gameId: code,
+            playerId: this.props.playerId
+            })
+          }
         }
         else if ((key === 'everyoneVote') && (value === 1)) {
+          //console.log("IN EVERYONE VOTE ")
+          //console.log("STATUS IN EVERYONE VOTE IS: " + status)
+          //console.log("CONSTANT IN EVERYONE VOTE IS: " + constant)
           // If its time for everyone to vote
+          if (this.state.status === 1) {
+            //console.log("IN STATUS === 1");
+            //console.log("STATUS IN IF IS: " + status)
+            //console.log("CONSTANT IN IF IS: " + constant)
             this.props.navigator.push({
             id: 'VotingPage',
-            gameId: code
-          })
+            gameId: code,
+            playerId: this.props.playerId
+            })
+          }
         }
       });
   }
 
-  checkStatus(){
+  checkStatus() {
 		console.log("The game id in CHECK STATUS IS " + this.props.gameId);
 		var code = this.props.gameId+'-players/' + this.props.playerId;
-		playersRef.child(code).on('child_changed', snapshot =>{
+		playersRef.child(code).on('child_changed', snapshot => {
 			var key = snapshot.key;
 			var value = snapshot.val();
-			console.log("The key in CHECK STATUS IS" + key);
-			console.log("the value in CHECK STATUS IS " + value);
+			//console.log("The key in CHECK STATUS IS" + key);
+			//console.log("the value in CHECK STATUS IS " + value);
 			if((key === 'status') && (value === 0)){
-				this.setState({citizenTitle: "You were a Citizen.", citizenBody: "Now you are DEAD."});
+        console.log("SETTING STATE TO 0")
+				this.setState({citizenTitle: "You were a Citizen.", citizenBody: "Now you are DEAD.", status: 0});
 			}
 		});
   }
 
-	getPlayerStatus(){
-		//This function gets the player status, and renders them.
+	listenOnWhoDied(){
+    console.log("IN LISTEN ON WHO DIED")
+		var code = this.props.gameId
+    var path = code.concat("-players");
 
+    playersRef.child(path).on('child_changed', snapshot => {
+      if(snapshot.val() !== null) {
+        var value = snapshot.val()
+        var key = snapshot.key;
+        console.log("KEY IS: ")
+        console.log(key);
+        console.log("VALUE IS: ");
+        console.log(value)
+
+        if(key === 'who_died') {
+          playersRef.child(path).once('value', snapshot => {
+            //Reset total votes back to 0
+            var name = snapshot.val().who_died
+            console.log("NAME IS: " + name)
+            Alert.alert(name + 'HAS DIED', 'Say your goodbyez', [{text: 'OK', onPress: () => console.log('OK Pressed')}], { cancelable: false });
+            //Resets cahootVote and everyoneVote back to 0
+          });
+        }
+      }
+    });
 	}
 
   componentDidMount() {
+    console.log("IN COMPONENT DID MOUNT PLAYER CARDS")
+    this.listenOnWhoDied();
 		console.log("The props player id is " + this.props.playerId);
-    var player = this.props.gameId+'-players/' + this.props.playerId;
-    var role = player.charName;
-    var isCahoot;
-    if (role === "Warlord") {
-      isCahoot = 1;
-    }
-    else {
-      isCahoot = 0;
-    }
-    // Render the vote page depending on which vote were doing
-    this.getVotePage(isCahoot);
-    // Check if i've died
-    this.checkStatus();
-
+    var path = this.props.gameId+'-players/' + this.props.playerId;
+    playersRef.child(path).on('value', snapshot => {
+      var player = snapshot.val();
+      var role = player.charName;
+      var playerStatus = player.status;
+      console.log("STATUS IN COMPONENT DID MOUNT IS: " + playerStatus)
+      var isCahoot;
+  		console.log("The role is " + role);
+      if (role === "Warlord") {
+        isCahoot = 1;
+      }
+      else {
+        isCahoot = 0
+      }
+      // Render the vote page depending on which vote were doing
+      this.getVotePage(isCahoot,playerStatus);
+      // Check if i've died
+      this.checkStatus();
+    });
   }
 
   render() {

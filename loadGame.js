@@ -62,13 +62,15 @@ export class GenerateGameCode extends Component{
 			// This value we use to check against when people are added to the database
 			'totalNumPlayers': 1,
 			// This value is the one we minus from when someone dies, helps us render the "everyoneVote page"
-			'totalNumVoters': numplayer - 1
+			'totalNumVoters': numplayer - 1,
+      'who_died': ''
 		})
 
 		console.log("The name is" + this.props.name);
 
 		firebase.database().ref(PlayerPath + 0).set({
 			'ismoderator': 1,
+      'facebookID': 0,
 			'status': -1,
 			'name': that.props.name,
 			'facebookID': that.props.fbID,
@@ -221,8 +223,8 @@ export class EnterGameCode extends Component {
             }
             count++;
           });
-			})
-		}
+        });
+			}
 
 			else {
 				console.log("Error the game doesn't exist");

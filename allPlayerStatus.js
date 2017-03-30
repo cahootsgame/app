@@ -24,18 +24,18 @@ class AllPlayerStatus extends Component {
 		 citizenTitle: "You are a Citizen",
 		 citizenBody: "You do not have any special powers but keep an eye out for the bad guys so you can exile them."
 	 };
-	 console.log("Setting state the data is ");
+	 //console.log("Setting state the data is ");
 	 //console.log(data);
   }
 
 	componentDidMount(){
-		console.log("IN component did mount");
+		//console.log("IN component did mount");
 		this.getAllPlayers();
 		this.checkStatus();
 	}
 
 	shouldComponentUpdate(){
-		console.log("In should updatte!");
+		//console.log("In should updatte!");
 		return true;
 	}
 
@@ -44,26 +44,26 @@ class AllPlayerStatus extends Component {
 	 var code = this.props.gameId+'-players';
 	 playersRef.child(code).once("value")
 	 	.then(function(snapshot) {
-			console.log("BEFORE HE FOR LOOOOOOÔP!!!!!!!!!!!!!!!!")
-			console.log("The snapshot value is");
-			console.log(snapshot.val());
+			//console.log("BEFORE HE FOR LOOOOOOÔP!!!!!!!!!!!!!!!!")
+			//console.log("The snapshot value is");
+			//console.log(snapshot.val());
 			//var playerArr = [];
 			var playerArr = [];
 			var key = snapshot.key
-			console.log("The key is" + key);
-			console.log("The ")
+			//console.log("The key is" + key);
+			//console.log("The ")
 			//snapshot.val() is an object. We know the number of keys, thus iterate through it
 			var totalPlayers = snapshot.val().totalNumPlayers;
 			for(var i = 0; i<totalPlayers; i++){
 
 				//player is an object which represents player i.
-				console.log("The snapshot value is");
-				console.log(snapshot.val());
+				//console.log("The snapshot value is");
+				//console.log(snapshot.val());
 				var player = snapshot.val()[i];
 
-				console.log("the i is" + i);
-				console.log("THE PLAYER IS");
-				console.log(player);
+				//console.log("the i is" + i);
+				//console.log("THE PLAYER IS");
+				//console.log(player);
 				if(typeof(player) === 'undefined'){
 					console.log("PLAYER UNDEFINED HELP!!!!!!!!!!!!!")
 					continue;
@@ -73,13 +73,13 @@ class AllPlayerStatus extends Component {
 				if(player.ismoderator !== 1){
 
 					playerArr.push(player);
-					console.log("The player is arr");
-					console.log(playerArr);
+					//console.log("The player is arr");
+					//console.log(playerArr);
 				}
 
 			}
-			console.log("DONE THE FOR LOOP");
-			console.log(playerArr);
+			//console.log("DONE THE FOR LOOP");
+			//console.log(playerArr);
 			this.setState({
 				dataSource: this.state.dataSource.cloneWithRows(playerArr)
 			});
@@ -88,10 +88,10 @@ class AllPlayerStatus extends Component {
  }
 
  checkStatus(){
-	console.log("in check status");
+	//console.log("in check status");
 	var code = this.props.gameId+'-players';
 	playersRef.child(code).on('child_changed', snapshot =>{
-		console.log("CHANGE OCCURED");
+		//console.log("CHANGE OCCURED");
 		var key = snapshot.key;
 		var value = snapshot.val();
 		//console.log("The key in CHECK STATUS IS" + key);
@@ -115,12 +115,12 @@ copyArray(arr, value){
 }
 
 renderRow(data){
-	console.log("Tde data is!!!!")
-	console.log(data);
+	//console.log("Tde data is!!!!")
+	//console.log(data);
 	//debugger;
 	var status = data.status;
 	status = typeof(data.status) === 'undefined' ? 1 : data.status;
-	console.log('thestatus is' + status + ' type : ' + typeof(status))
+	//console.log('thestatus is' + status + ' type : ' + typeof(status))
 	switch(status){
 		case 1:
 		return(
@@ -148,8 +148,8 @@ renderRow(data){
 
   render() {
 					//this.getAllPlayers();
-					console.log("IN RENDER");
-					console.log(this.state.dataSource);
+					//console.log("IN RENDER");
+					//console.log(this.state.dataSource);
           return (
         			<ListView
 							contentContainerStyle={styles.list}
