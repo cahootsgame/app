@@ -260,6 +260,8 @@ getAllPlayers(){
 
 
   completeVote(k,playerToKill,totalVotes) {
+      console.log("IN COMPLETE VOTE - PLAYER TO KILL IS: ")
+      console.log(playerToKill);
       var code = this.props.gameId;
       var playersEntry = code.concat("-players");
       var playerPath = 'Players/'.concat(playersEntry);
@@ -276,8 +278,9 @@ getAllPlayers(){
 
       //Check from the Database if it was cahoot vote or everyone vote
       //If everyoneVote, call addToVote, else call complete voe with two params.
-      var k;
-
+      var code = this.props.gameId;
+      var playersEntry = code.concat("-players");
+      var playerPath = 'Players/'.concat(playersEntry);
       var totalCurrentPlayers;
       if (this.state.everyoneVote === 1) {
         this.addVote(code,whoToKill);
@@ -289,9 +292,12 @@ getAllPlayers(){
               var numVotes;
               for(var i = 0; i<totalCurrentPlayers; i++){
                 var player = snapshot.val()[i];
-                if(player.facebookID === playerID){
+                if(player.facebookID === this.props.playerId){
                   //Someone wanted to kill this player, add 1 to their vote.
-                  this.completeVote(i,player);
+                  console.log("ABOUT TO CALL COMPELTE VOTE WITH: ")
+                  console.log(player)
+                  console.log("ID OF PLAYER TO KILL: " + i);
+                  this.completeVote(i,player,0);
                 }
               }
             }

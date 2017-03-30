@@ -37,14 +37,16 @@ class PlayerCards extends Component {
           // If its time for the cahoots to vote
             this.props.navigator.push({
             id: 'VotingPage',
-            gameId: code
+            gameId: code,
+            playerId: this.props.playerId
           })
         }
         else if ((key === 'everyoneVote') && (value === 1)) {
           // If its time for everyone to vote
             this.props.navigator.push({
             id: 'VotingPage',
-            gameId: code
+            gameId: code,
+            playerId: this.props.playerId
           })
         }
       });
