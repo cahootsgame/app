@@ -35,7 +35,7 @@ export default class LandingPage extends Component {
         <TouchableButton  onButtonClick={this.onPressStartNewGame.bind(this)} text={"START"}/>
         <TouchableButton onButtonClick={this.onPressConnectGame.bind(this)} text={"CONNECT TO AN EXISTING GAME"}/>
         <TouchableButton text={"HOW TO PLAY"}/>
-        <OpenURLButton url={'fb-messenger://app'} />
+        <OpenURLButton url={'fb-messenger-api://app'} />
       </View>
     );
   }
