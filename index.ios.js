@@ -58,14 +58,16 @@ class Cahoots extends Component {
 
       case 'ChooseTheme':
         return (<ChooseTheme navigator={navigator} title="Choose the theme" numOfPlayers={route.numOfPlayers}/>);
+
       case 'ModeratorActions':
         return(<ModeratorActions navigator={navigator} title="Moderator Screen" gameId={route.gameId} playerId={route.playerId}/>);
+        
       case 'PlayerCards':
         return(<PlayerCards navigator={navigator} title="Wait for players to connect" role={route.role} status={route.status} gameId={route.gameId} playerId={route.playerId}/>);
       case 'VotingPage':
           return(<VotingPage navigator={navigator} gameId={route.gameId}/>);
       case 'VotingResults':
-          return(<VotingResults navigator={navigator} />);
+          return(<VotingResults navigator={navigator} nameWhoGotKilled={route.nameWhoGotKilled}/>);
     }
   }
 }
