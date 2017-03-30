@@ -18,6 +18,7 @@ import {
   TouchableHighlight,
   ListView,
   Image,
+  Alert,
   Row,
   Dimensions
 } from 'react-native';
@@ -68,10 +69,11 @@ export default class VotingPage extends Component {
               database.ref('Players/' + path).update({'total_vote': 0});
               //Resets cahootVote and everyoneVote back to 0
               this.resetVote();
-              this.props.navigator.push({
+              /*this.props.navigator.push({
                 id: 'VotingResults',
                 nameWhoGotKilled: name
-              })
+              })*/
+              this.props.navigator.pop();
             });
           }
       }
@@ -270,7 +272,7 @@ getAllPlayers(){
         this.setState({nameOfKilled: name});
         database.ref(playerPath).update({'total_vote': totalVotes, 'who_died': name});
       });
-      //this.resetVote();
+      Alert.alert(name + 'HAS DIED',[{text: 'OK', onPress: () => console.log('OK Pressed')}], { cancelable: false });
     }
 
 
@@ -292,16 +294,18 @@ getAllPlayers(){
               var numVotes;
               for(var i = 0; i<totalCurrentPlayers; i++){
                 var player = snapshot.val()[i];
-                if(player.facebookID === this.props.playerId){
+                console.log()
+                if(player.facebookID === whoToKill){
                   //Someone wanted to kill this player, add 1 to their vote.
-                  console.log("ABOUT TO CALL COMPELTE VOTE WITH: ")
-                  console.log(player)
-                  console.log("ID OF PLAYER TO KILL: " + i);
+             ///     console.log("ABOUT TO CALL COMPELTE VOTE WITH: ")
+               //   console.log(player)
+                //  console.log("ID OF PLAYER TO KILL: " + i);
                   this.completeVote(i,player,0);
                 }
               }
             }
         })
+        this.props.navigator.pop();
       }
     }
 
