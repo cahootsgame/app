@@ -90,7 +90,7 @@ class PlayerCards extends Component {
 	}
 
   componentDidMount() {
-    listenOnWhoDied();
+    this.listenOnWhoDied();
 		console.log("The props player id is " + this.props.playerId);
     var path = this.props.gameId+'-players/' + this.props.playerId;
     playersRef.child(path).on('value', snapshot => {
