@@ -8,7 +8,7 @@ import React, { Component } from 'react';
 import {EnterGameCode, GenerateGameCode} from './loadGame.js';
 import TouchableButton from './touchableButton';
 import NumberOfPlayers from './numberOfPlayers';
-
+import OpenURLButton from './messengerButton';
 import {
   AppRegistry,
   StyleSheet,
@@ -16,7 +16,9 @@ import {
   Text,
   View,
   Button,
-  TouchableHighlight
+  TouchableHighlight,
+  TouchableOpacity,
+  Linking
 } from 'react-native';
 
 // Can we assign player IDs here?
@@ -33,6 +35,7 @@ export default class LandingPage extends Component {
         <TouchableButton  onButtonClick={this.onPressStartNewGame.bind(this)} text={"START"}/>
         <TouchableButton onButtonClick={this.onPressConnectGame.bind(this)} text={"CONNECT TO AN EXISTING GAME"}/>
         <TouchableButton text={"HOW TO PLAY"}/>
+        <OpenURLButton url={'fb-messenger-api://app'} />
       </View>
     );
   }
@@ -40,7 +43,11 @@ export default class LandingPage extends Component {
   onPressStartNewGame(){
     //console.log("START NEW GAME PRESSED")
     this.props.navigator.push({
-      id: 'NumberOfPlayers'
+      id: 'NumberOfPlayers',
+			fbID: this.props.fbID,
+			name: this.props.name,
+			fbProfilePic: this.props.fbProfilePic,
+      numOfPlayers: this.props.numOfPlayers
     })
 
   }
@@ -48,7 +55,10 @@ export default class LandingPage extends Component {
   onPressConnectGame() {
     console.log("CONNECT TO GAME PRESSED");
 		this.props.navigator.push({
-			id: 'EnterGameCode'
+			id: 'EnterGameCode',
+			fbID: this.props.fbID,
+			name: this.props.name,
+			fbProfilePic: this.props.fbProfilePic
 		})
         // This component will be pushed onto the stack
   }
@@ -62,4 +72,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     fontWeight: "100",
   },
+	button: {
+		color: 'white',
+	}
 });

@@ -33,25 +33,31 @@ export default class ConnectingPlayers extends Component {
     super(props);
     this.state = {
       animating: true,
-      characters4: ["Warlord", "Citizen", "Citizen"]
+      numOfPlayers: 0
     };
   }
 
   componentDidMount() {
+		console.log("IN component Did mount");
     var code = this.props.gameId;
     var playersPath = code.concat("-players");
-    this.setToggleTimeout();
-    playersRef.child(playersPath).once('value', snapshot => {
-      var totalNum = snapshot.val().totalNumPlayers;
-			console.log("the total number of playres is " + totalNum);
-      if(totalNum !== 4){
-        this.waitForPlayers();
-      }
-      else{
-        this.pushCharacterCard();
-      }
+
+    gameRef.child(code).once('value', snapshot => {
+      var totalGamePlayers = snapshot.val().numPlayers;
+      this.setState({numOfPlayers: totalGamePlayers}, function() {
+          playersRef.child(playersPath).once('value', snapshot => {
+            var totalNum = snapshot.val().totalNumPlayers;
+            console.log("the total number of playres currently is " + totalNum);
+            console.log ("this total numer fo players in the game is: " + this.state.numOfPlayers)
+            if (totalNum !== this.state.numOfPlayers) {
+              this.waitForPlayers(this.state.numOfPlayers);
+            }
+            else{
+              this.pushCharacterCard();
+            }
+        });
+      });
     });
-    //this.waitForPlayers();
   }
 
   componentWillUnmount() {
@@ -75,47 +81,77 @@ export default class ConnectingPlayers extends Component {
 
 
 
-  waitForPlayers() {
-
-  var totalCurrentPlayers;
-  var totalFinalPlayers;
-  var code = this.props.gameId;
-  var playerId = this.props.playerId;
-  var playersPath = code.concat("-players");
-  var check = true;
-  playersRef.child(playersPath).on('child_changed', snapshot =>{
-    var value = snapshot.val()
-    var key = snapshot.key;
-    console.log(key);
-    console.log(value);
-    if((key === 'totalNumPlayers') && (value === 4)){
-      this.pushCharacterCard();
-    }
-    console.log("Added value");
-  });
-
-
-}
+  waitForPlayers(numOfPlayers) {
+    var totalCurrentPlayers;
+    var totalFinalPlayers;
+    var code = this.props.gameId;
+    var playerId = this.props.playerId;
+    var playersPath = code.concat("-players");
+    var check = true;
+    playersRef.child(playersPath).on('child_changed', snapshot =>{
+			console.log("IN WAIINGFOR PLAYERS CHILD CHANGEID!!!!!!!!")
+      var value = snapshot.val()
+      var key = snapshot.key;
+      console.log(key);
+      console.log(value);
+      if((key === 'totalNumPlayers') && (value === numOfPlayers)){
+        this.pushCharacterCard();
+      }
+      console.log("Added value");
+    });
+  }
 
   pushCharacterCard() {
-    if(this.props.playerId === 1){
-      this.props.navigator.push({
-        id: 'PlayerCards',
-        role: "Warlord",
-        status: 1,
-        gameId: this.props.gameId,
-				playerId: this.props.playerId
+		console.log("PUSING CHARACTER CARD");
+    var code = this.props.gameId;
+    var playersPath = code.concat("-players/"+this.props.playerId);
+    var name;
+    var self = this;
+    playersRef.child(playersPath).once('value').then(function(snapshot){
+      name = snapshot.val().charName;
+      console.log("IN ConnectingPlayers, AND NAME IS "+name);
+      self.props.navigator.push({
+          id: 'PlayerCards',
+          role: name,
+          gameId: self.props.gameId,
+  				playerId: self.props.playerId
       });
+    });
+
+    /*var playerRole;
+    if(totalPlayers === 4){
+      playerRole = characters4[index];
     }
-    else{
-      this.props.navigator.push({
-        id: 'PlayerCards',
-        role: "Citizen",
-        status: 1,
-        gameId: this.props.gameId,
-        playerId: this.props.playerId
+    else if (totalPlayers === 5){
+      playerRole = characters5[index];
+    }
+    else {
+      playerRole = characters6[index];
+    }
+    var code = this.props.gameId;
+    var playersPath = code.concat("-players");
+    var done = false;
+    var charId = null;
+    playersRef.child(playersPath).once('value', snapshot => {
+      do {
+        snapshot.forEach(function(childSnapshot) {
+          var charId = childSnapshot.val().charId;
+
+        });
+      }
+      snapshot.forEach(function(childSnapshot) {
+        var charId = childSnapshot.val().charId;
+        if
       });
-    }
+      var totalNum = snapshot.val().totalNumPlayers;
+			console.log("the total number of playres is " + totalNum);
+      if(totalNum !== 4){
+        this.waitForPlayers();
+      }
+      else{
+        this.pushCharacterCard();
+      }
+    });*/
 
   }
 

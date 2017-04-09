@@ -39,8 +39,13 @@ class ChooseTheme extends Component {
 
   onPressNext(){
     console.log("Next pressed in choose theme")
+    console.log("NUM PLAYERS IN THEME: " + this.props.numOfPlayers)
     this.props.navigator.push({
-      id: 'GenerateGameCode'
+      id: 'GenerateGameCode',
+			fbID: this.props.fbID,
+			name: this.props.name,
+			fbProfilePic: this.props.fbProfilePic,
+      numOfPlayers: this.props.numOfPlayers
     })
   }
 

@@ -42,30 +42,34 @@ class Cahoots extends Component {
         return (<Login navigator={navigator} title="login"/>);
 
       case 'LandingPage':
-        return (<LandingPage navigator={navigator} title="Start new game or connect"/>);
+        return (<LandingPage navigator={navigator} title="Start new game or connect" numOfPlayers={route.numOfPlayers} fbID={route.fbID} name={route.name} fbProfilePic={route.fbProfilePic}/>);
 
       case 'EnterGameCode':
-        return (<EnterGameCode navigator={navigator} title="Enter new game code"/>);
+        return (<EnterGameCode navigator={navigator} title="Enter new game code" numOfPlayers={route.numOfPlayers} fbID={route.fbID} name={route.name} fbProfilePic={route.fbProfilePic} />);
 
 			case 'GenerateGameCode':
-				return(<GenerateGameCode navigator={navigator} title="Enter new game code" />);
+				return(<GenerateGameCode navigator={navigator} title="Enter new game code" numOfPlayers={route.numOfPlayers} fbID={route.fbID} name={route.name} fbProfilePic={route.fbProfilePic}/>);
 
 			case 'ConnectingPlayers':
 				return(<ConnectingPlayers navigator={navigator} title="Wait for players to connect" gameId={route.gameId} playerId={route.playerId}/>);
 
       case 'NumberOfPlayers':
-        return (<NumberOfPlayers navigator={navigator} title="Enter the number of players"/>);
+        return (<NumberOfPlayers navigator={navigator} title="Enter the number of players" fbID={route.fbID} name={route.name} fbProfilePic={route.fbProfilePic}/>);
 
       case 'ChooseTheme':
-        return (<ChooseTheme navigator={navigator} title="Choose the theme"/>);
+        return (<ChooseTheme navigator={navigator} title="Choose the theme" numOfPlayers={route.numOfPlayers} fbID={route.fbID} name={route.name} fbProfilePic={route.fbProfilePic}/>);
+
       case 'ModeratorActions':
         return(<ModeratorActions navigator={navigator} title="Moderator Screen" gameId={route.gameId} playerId={route.playerId}/>);
+
       case 'PlayerCards':
-        return(<PlayerCards navigator={navigator} title="Wait for players to connect" role={route.role} status={route.status} gameId={route.gameId} playerId={route.playerId}/>);
+        return(<PlayerCards navigator={navigator} title="Wait for players to connect" role={route.role} gameId={route.gameId} playerId={route.playerId}/>);
+
       case 'VotingPage':
-          return(<VotingPage navigator={navigator} gameId={route.gameId}/>);
+          return(<VotingPage navigator={navigator} gameId={route.gameId} playerId={route.playerId}/>);
+
       case 'VotingResults':
-          return(<VotingResults navigator={navigator} />);
+          return(<VotingResults navigator={navigator} nameWhoGotKilled={route.nameWhoGotKilled}/>);
     }
   }
 }

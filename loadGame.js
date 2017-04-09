@@ -23,9 +23,10 @@ export class GenerateGameCode extends Component{
 		super(props);
 		this.state={
 			gameId: '',
-			myId: ''
+			myId: '',
 		}
 	}
+
 
 	pushNewGame(){
 		//This function pushes a new Game to the database.
@@ -34,22 +35,48 @@ export class GenerateGameCode extends Component{
 		var playersEntry = this.state.gameId.concat("-players");
 		var playersEntryWithSlash = this.state.gameId.concat("-players/");
 		var PlayerPath = 'Players/'.concat(playersEntryWithSlash);
-
+    var that = this;
+		var numCahoots = 2;
+		if (this.props.numOfPlayers === 4) {
+			numCahoots = 1;
+		}
+		else if (this.props.numOfPlayers === 5) {
+			numCahoots = 2;
+		}
+		else if (this.props.numOfPlayers === 6) {
+			numCahoots = 2;
+		}
+		var numplayer = this.props.numOfPlayers
+		console.log("num of players: " + this.props.numOfPlayers)
 		firebase.database().ref('Game/' + this.state.gameId).set({
 			'adminId': 0,
-			'numPlayers': 4,
+			'numPlayers': numplayer,
+			'numCahoots': numCahoots,
 			'theme': 0,
 			'cahootVote': 0,
-			//'players': [0]
+			'everyoneVote': 0
 		})
 		firebase.database().ref('Players/' + playersEntry).set({
+			'total_vote': 0,
 			'gameId': this.state.gameId,
-			'totalNumPlayers': 1
+			// This value we use to check against when people are added to the database
+			'totalNumPlayers': 1,
+			// This value is the one we minus from when someone dies, helps us render the "everyoneVote page"
+			'totalNumVoters': numplayer - 1,
+      'who_died': ''
 		})
+
+		console.log("The name is" + this.props.name);
 
 		firebase.database().ref(PlayerPath + 0).set({
 			'ismoderator': 1,
+      'facebookID': 0,
 			'status': -1,
+			'name': that.props.name,
+			'facebookID': that.props.fbID,
+			'fbProfilePic': that.props.fbProfilePic,
+      'charId': -1,
+      'charName': 'Moderator'
 		})
 	}
 
@@ -63,7 +90,7 @@ export class GenerateGameCode extends Component{
 			gameId: this.state.gameId,
 			playerId: this.state.myId
 
-		})
+		});
 	}
   onPressBack() {
     console.log("Back pressed in game id screen")
@@ -79,7 +106,7 @@ export class GenerateGameCode extends Component{
           </Text>
           <TouchableButton style={styles.back} text={"BACK"} onButtonClick={this.onPressBack.bind(this)}/>
 
-        <TouchableButton  onButtonClick={this.onPressModScreen.bind(this)} text={"START"}/>
+          <TouchableButton  onButtonClick={this.onPressModScreen.bind(this)} text={"START"}/>
       </View>
 
       // IF state.
@@ -91,9 +118,22 @@ export class EnterGameCode extends Component {
 	constructor(props){
 		super(props);
 		this.state={
-			gameId: ''
+			gameId: '',
+      characters4: [{name: "Warlord", assigned: false},
+                    {name: "Citizen", assigned: false},
+                    {name: "Citizen", assigned: false}],
+      characters5: [{name: "Warlord", assigned: false},
+                    {name: "Warlord", assigned: false},
+                    {name: "Citizen", assigned: false},
+                    {name: "Citizen", assigned: false}],
+      characters6: [{name: "Warlord", assigned: false},
+                    {name: "Warlord", assigned: false},
+                    {name: "Citizen", assigned: false},
+                    {name: "Citizen", assigned: false},
+                    {name: "Citizen", assigned: false}]
 		}
 	}
+
 
 	pushConnectingScene(code){
 		// overwriting entire game, want to just set player field
@@ -105,29 +145,101 @@ export class EnterGameCode extends Component {
 
 	}
 
+  assign(numOfPlayers, array, index, code, playerPath, total, playersEntry, name, fbID, fbProfilePic){
+    var self = this;
+    console.log("initial index is "+index);
+
+		while (array[index].assigned){
+      console.log("array[index] is "+array[index]+'and index is '+index);
+      if(index === numOfPlayers-2){
+        index = 0;
+      }
+      else {
+        index++;
+      }
+      console.log('index is now '+index);
+    }
+
+		var charName = array[index].name;
+		console.log("The name is");
+		console.log(name);
+		console.log("The player path is" + playerPath)
+    firebase.database().ref(playerPath + total).set({
+      'name': name,
+			'ismoderator': 0,
+			'fbProfilePic': fbProfilePic,
+      'facebookID': fbID,
+      'ismoderator': 0,
+      'status': 1,
+      'numvotes': 0,
+      'charId': index,
+      'charName': charName
+    }, function(error){
+        // Callback comes here
+        if(error){
+          console.log(error);
+        }
+        else{
+					console.log("playerPath is" + playerPath);
+					console.log("playersEntry" + playersEntry);
+          self.incrementPlayers(playerPath, playersEntry, code);
+        }
+      }
+    );
+
+  }
+
 	addPlayerToDatabase(code, totalNum) {
+    var self = this;
+    var numOfPlayers;
+    var array;
 		console.log("IN ADD PLAYER")
-		var playersEntry = code.concat("-players/");
-		var playerPath = 'Players/'.concat(playersEntry);
+
 		gameRef.child(code).once('value', snapshot => {
+			var self = this;
+			var playersEntry = code.concat("-players/");
+			var playerPath = 'Players/'.concat(playersEntry);
 			if(snapshot.val() !== null){
 				console.log("Game exists");
 				total = totalNum - 1;
+        numOfPlayers = snapshot.val().numPlayers;
+        var index = Math.floor(Math.random() * (numOfPlayers-2 - 0)) + 0; //TODO: must change if moderator situation changes, can't be -2 anymore
+        if (numOfPlayers === 4){
+          array = this.state.characters4;
+        }
+        else if (numOfPlayers === 5){
+          array = this.state.characters5;
+        }
+        else if (numOfPlayers === 6){
+          array = this.state.characters6;
+        }
 				this.setState({myId: total});
-				firebase.database().ref(playerPath + total).set({
-					'ismoderator': 0,
-					'status': 1,
-				});
-				console.log("the myId state is : " + this.state.myId);
-				this.pushConnectingScene(code);
+
+        playersRef.child(playersEntry).once('value').then(function(snapshot){
+          var length = Object.keys(snapshot).length;
+          var count = 1;
+          snapshot.forEach(function(childSnapshot) {
+            var charId = childSnapshot.val().charId;
+            console.log(charId);
+            console.log(array[charId]);
+            if(charId !== -1 && charId !== undefined){
+              array[charId].assigned = true;
+              console.log(array[charId]);
+            }
+            if(count === length){
+              self.assign(numOfPlayers, array, index, code, playerPath, total, playersEntry, self.props.name, self.props.fbID, self.props.fbProfilePic);
+            }
+            count++;
+          });
+        });
 			}
 
 			else {
 				console.log("Error the game doesn't exist");
 				Alert.alert('Invalid Game Code','The game code you have entered does not exist, please try again.',[{text: 'OK', onPress: () => console.log('OK Pressed')}], { cancelable: false });
 			}
-		})
-	}
+		});
+}
 
 	connectPlayers(code){
 		console.log("IN CONNECT PLAYERS");
@@ -140,12 +252,33 @@ export class EnterGameCode extends Component {
 						console.log("Snapshot valu found");
        			totalCurrentPlayers = snapshot.val().totalNumPlayers;
        			totalCurrentPlayers = totalCurrentPlayers + 1;
-        		database.ref(playerPath).update({'totalNumPlayers': totalCurrentPlayers});
         		this.addPlayerToDatabase(code,totalCurrentPlayers);
+      		}
+      		else {
+      			console.log("NO GAME");
+      			Alert.alert('Invalid Game Code','The game code you have entered does not exist, please try again.',[{text: 'OK', onPress: () => console.log('OK Pressed')}], { cancelable: false });
       		}
     	})
 
 	}
+
+	incrementPlayers(playerPath, playersEntry, code){
+		console.log("IN INCREMENT PLAYERS")
+		playersRef.child(playersEntry).once('value', snapshot => {
+			console.log("BEFORE SNAPSHOT NOT = NULL");
+			    var totalCurrentPlayers;
+					if (snapshot.val() != null) {
+						console.log("Snapshot valu found");
+						totalCurrentPlayers = snapshot.val().totalNumPlayers;
+						console.log("The totalCurrentPlayers before adding is :" + totalCurrentPlayers);
+						totalCurrentPlayers = totalCurrentPlayers + 1;
+						console.log("Total current players is  after adding  " + totalCurrentPlayers);
+						database.ref(playerPath).update({'totalNumPlayers': totalCurrentPlayers});
+						console.log("the myId state is : " + this.state.myId);
+			      this.pushConnectingScene(code);
+					}
+				});
+			}
 
 	onPressBack() {
     console.log("Back pressed in enter game code screen")
